@@ -1,17 +1,20 @@
 {
   "name": "ember-cli-plotly",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "A basic charting component using Plotly.js",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "data-visualization",
+    "chart",
+    "plotly"
   ],
   "license": "MIT",
-  "author": "",
+  "author": "Jacob Quant <jacobq@gmail.com>",
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+  "repository": "https://github.com/EmberMN/ember-cli-plotly",
   "scripts": {
     "build": "ember build",
     "lint:js": "eslint ./*.js addon addon-test-support app config lib server test-support tests",

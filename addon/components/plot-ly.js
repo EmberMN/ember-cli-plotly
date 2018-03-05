@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import layout from '../templates/components/plot-ly';
-//import debug from 'debug';
-//debug = debug('ember-cli-plotly:plot-ly-component');
+import debug from 'debug';
+const log = debug('ember-cli-plotly:plot-ly-component');
 
 export default Component.extend({
   layout,
@@ -16,6 +16,6 @@ export default Component.extend({
     });
   },
   didInsertElement() {
-    //debug('didInsertElement');
+    log('didInsertElement');
   }
 });

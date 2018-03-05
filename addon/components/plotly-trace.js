@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import layout from '../templates/components/plotly-trace';
-//import debug from 'debug';
-//debug = debug('ember-cli-plotly:plotly-trace-component');
+import debug from 'debug';
+const log = debug('ember-cli-plotly:plotly-trace-component');
 
 export default Component.extend({
   layout,
@@ -15,6 +15,6 @@ export default Component.extend({
     });
   },
   didInsertElement() {
-    //debug('didInsertElement');
+    log('didInsertElement');
   }
 });

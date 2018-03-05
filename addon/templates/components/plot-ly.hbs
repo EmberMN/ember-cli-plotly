@@ -1,4 +1,10 @@
-<div id={{plotlyContainerId}} class="plotly-container"></div>
-{{#each traces as |trace|}}
-  {{plotly-trace}}
+<div id={{_plotlyContainerId}}></div>
+{{#each traces as |trace i|}}
+  {{plotly-trace
+    x=trace.x
+    y=trace.y
+    type=trace.type
+    onTraceDataChanged=(action 'traceDataChanged' i)
+    onTraceTypeChanged=(action 'traceTypeChanged' i)
+  }}
 {{/each}}

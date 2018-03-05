@@ -15,6 +15,6 @@ export default Component.extend({
     });
   },
   didInsertElement() {
-    log('didInsertElement');
+    log('didInsertElement', this);
   }
 });

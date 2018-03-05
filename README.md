@@ -1,7 +1,11 @@
 ember-cli-plotly
 ==============================================================================
 
-[Short description of the addon.]
+## TODO: Write documentation
+
+:warning: The information below was automatically generated
+(it needs to be updated)
+
 
 Installation
 ------------------------------------------------------------------------------

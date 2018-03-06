@@ -36,6 +36,7 @@
     "ember-cli-qunit": "^4.3.2",
     "ember-cli-shims": "^1.2.0",
     "ember-cli-sri": "^2.1.1",
+    "ember-cli-testdouble": "^0.1.2",
     "ember-cli-uglify": "^2.0.2",
     "ember-debug-logger": "^1.1.0",
     "ember-disable-prototype-extensions": "^1.1.3",
@@ -51,7 +52,8 @@
     "ember-try": "^0.2.23",
     "eslint-plugin-ember": "^5.0.3",
     "eslint-plugin-node": "^6.0.1",
-    "loader.js": "^4.6.0"
+    "loader.js": "^4.6.0",
+    "testdouble": "^2.0.0"
   },
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"

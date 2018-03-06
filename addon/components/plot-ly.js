@@ -59,7 +59,7 @@ const Trace = EmberObject.extend({
   y: null,
   hash: computed('x.[]', 'y.[]', {
     get() {
-      debugger;
+      //debugger;
       return [
         this.get('x').reduce(md5),
         this.get('y').reduce(md5)
@@ -76,9 +76,20 @@ export default Component.extend({
   },
   didReceiveAttrs() {
     log('didReceiveAttrs');
+
+    const traces = this.get('traces') || [];
+    const replotEveryTime = this.get('replotEveryTime') || false;
+    if (!replotEveryTime) {
+      const _hashes = this.get('_hashes') || {};
+
+      // 1 - compute hash of each trace
+      //     --> md5(JSON.stringify(Array.from(input_trace)))
+      // 2 - store
+      //
+      this.set('_hashes', _hashes);
+    }
     this.setProperties({
-      _plotlyContainerId: `ember-cli-plotly-${Date.now()}`,
-      traces: this.get('traces') || [],
+      traces,
       title: this.get('title') || '',
       xaxis: this.get('xaxis') || {},
       yaxis: this.get('yaxis') || {},
@@ -94,7 +105,7 @@ export default Component.extend({
     // FIXME: Do we really have to re-draw the whole thing when we add/remove a trace?
     scheduleOnce('afterRender', this, '_newPlot');
   },
-  _traces: map('traces', function(item, index) {
+  _traces: map('traces', function(item) {
     log('_traces map running');
     return Trace.create(item);
   }),
@@ -104,7 +115,7 @@ export default Component.extend({
 
   _newPlot() {
     log('_newPlot');
-    const id = this.get('_plotlyContainerId');
+    const id = this.elementId;
     const data = this.get('traces').reduce((data, trace) => {
       data.push({
         x: trace.x,
@@ -125,7 +136,7 @@ export default Component.extend({
   },
   _addRemoveTrace(index) {
     log('_addRemoveTrace', index);
-    const id = this.get('_plotlyContainerId');
+    const id = this.elementId;
     const trace = this.get('traces').objectAt(index);
     Plotly.deleteTraces(id, index).then(() => {
       log('Plotly.deleteTraces finished');
@@ -142,7 +153,7 @@ export default Component.extend({
     },
     traceTypeChanged(index) {
       log('traceTypeChanged', index);
-      const id = this.get('_plotlyContainerId');
+      const id = this.elementId;
       const type = this.get('traces').objectAt(index).get('type');
       Plotly.update(id, { type }).then(() => {
         log('Plotly.update finished');

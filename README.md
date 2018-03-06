@@ -1,27 +1,81 @@
-ember-cli-plotly
-==============================================================================
+# ember-cli-plotly
 
 [![Build Status](https://travis-ci.org/EmberMN/ember-cli-plotly.svg?branch=master)](https://travis-ci.org/EmberMN/ember-cli-plotly)
 
-## TODO: Write documentation
+This addon strives to make it easy & efficient to use
+[plotly.js](https://plot.ly/javascript/) in Ember applications.
+If you want to It uses [ember-plotly-shim](https://github.com/brianhjelle/ember-plotly-shim)
+to import the library into the pipeline.
+As , declarative API 
 
-:warning: The information below was automatically generated
-(it needs to be updated)
-
-
-Installation
-------------------------------------------------------------------------------
+## Installation
 
 ```
 ember install ember-cli-plotly
 ```
 
+## TODO: Write documentation
 
-Usage
-------------------------------------------------------------------------------
+## Usage
 
-[Longer description of how to use the addon in apps.]
+:exclamation: This API should be considered unstable for all v0.x versions of this addon.
 
+## Examples
+
+### Static
+This example uses [`ember-array-helper`](https://github.com/kellyselden/ember-array-helper).
+
+```handlebars
+{{plot-ly
+  
+  chartData=(array
+    (hash
+      name='y = 2x' 
+      x=(array 1 2 3) 
+      y=(array 2 4 6)
+      type='scatter'
+    ) 
+    (hash 
+      name='y = -x -1'
+      x=(array 0 2) 
+      y=(array -1 -3)
+      type='scatter'
+    ) 
+  )
+}}
+```
+
+### Dynamic
+
+```js
+import Controller from '@ember/controller';
+import { computed } from '@ember/object';
+
+export default Controller.extend({
+  chartData: computed('model.x', 'model.y', function() {
+    return {
+      x: this.get('model.x'),
+      y: this.get('model.y'),
+      type: 'bar'
+    };
+  });
+});
+```
+
+```handlebars
+{{plot-ly
+  chartData=chartData
+  chartLayout=chartLayout
+  chartOptions=chartOptions
+  onPlotlyEvent=onPlotlyEvent
+}}
+
+```
+
+
+
+:warning: The information below was automatically generated
+(it needs to be updated)
 
 Contributing
 ------------------------------------------------------------------------------

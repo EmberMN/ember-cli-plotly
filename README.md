@@ -1,6 +1,8 @@
 ember-cli-plotly
 ==============================================================================
 
+[![Build Status](https://travis-ci.org/EmberMN/ember-cli-plotly.svg?branch=master)](https://travis-ci.org/EmberMN/ember-cli-plotly)
+
 ## TODO: Write documentation
 
 :warning: The information below was automatically generated

@@ -12,6 +12,7 @@ addons:
   chrome: stable
 
 cache:
+  yarn: true
   directories:
     - $HOME/.npm
 
@@ -35,10 +36,10 @@ matrix:
   allow_failures:
     - env: EMBER_TRY_SCENARIO=ember-canary
 
-before_install:
-  - npm config set spin false
-  - npm install -g npm@4
-  - npm --version
+#before_install:
+  #- npm config set spin false
+  #- npm install -g npm@4
+  #- npm --version
 
 script:
   # Skip eslint for now

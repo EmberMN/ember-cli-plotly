@@ -1,8 +1,13 @@
 import Component from '@ember/component';
+import EmberObject, { computed, observer } from '@ember/object';
+import { map } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
+
 import layout from '../templates/components/plot-ly';
+
 import { extend } from 'lodash';
 import Plotly from 'plotly';
+import md5 from 'md5';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:plot-ly-component');
 
@@ -49,6 +54,20 @@ const defaultOptions = {
   locale: 'en-US',
 };
 
+const Trace = EmberObject.extend({
+  x: null,
+  y: null,
+  hash: computed('x.[]', 'y.[]', {
+    get() {
+      debugger;
+      return [
+        this.get('x').reduce(md5),
+        this.get('y').reduce(md5)
+      ].reduce(md5);
+    }
+  })
+});
+
 export default Component.extend({
   layout,
   init() {
@@ -75,6 +94,14 @@ export default Component.extend({
     // FIXME: Do we really have to re-draw the whole thing when we add/remove a trace?
     scheduleOnce('afterRender', this, '_newPlot');
   },
+  _traces: map('traces', function(item, index) {
+    log('_traces map running');
+    return Trace.create(item);
+  }),
+  _debug: observer('_traces.@each.hash', function() {
+    log('_traces.@each.hash fired');
+  }),
+
   _newPlot() {
     log('_newPlot');
     const id = this.get('_plotlyContainerId');

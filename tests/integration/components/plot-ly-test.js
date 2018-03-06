@@ -3,7 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
-import { clearRender, render, settled } from '@ember/test-helpers';
+import { clearRender, render, settled, pauseTest } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:test');
@@ -30,7 +30,6 @@ module('Integration | Component | plot-ly', function (hooks) {
     assert.equal(this.element.querySelectorAll('div.plotly-container').length, 0,
       'The .plotly-container element should be gone after clearing the render');
   });
-
 
   test('it draws a simple scatter chart', async function (assert) {
     const traces = [{
@@ -70,7 +69,6 @@ module('Integration | Component | plot-ly', function (hooks) {
     assert.equal(this.element.querySelectorAll(legendEntrySelector).length,
       0, 'There should be no legend entry (since there is only 1 trace)');
 
-
     log('Add another point to that single series');
     run(() => {
       traces.get('firstObject.x').pushObject(2);
@@ -81,6 +79,7 @@ module('Integration | Component | plot-ly', function (hooks) {
       3, 'Trace should have 3 points after data updates');
     assert.equal(this.element.querySelectorAll(legendEntrySelector).length,
       0, 'There should still be no legend entries');
+    await pauseTest();
 
     log('push another trace');
     run(() => {
@@ -114,5 +113,6 @@ module('Integration | Component | plot-ly', function (hooks) {
       1, 'There should be 1 (bar) trace now');
     assert.equal(this.element.querySelectorAll(`${scatterLayerSelector} g.trace.scatter`).length,
       1, 'There should be 1 (scatter) trace now');
+    await pauseTest();
   });
 });

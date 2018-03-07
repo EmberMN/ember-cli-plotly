@@ -3,7 +3,9 @@ import { setupRenderingTest } from 'ember-qunit';
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
-import { clearRender, click, render, settled, pauseTest, triggerEvent, waitFor } from '@ember/test-helpers';
+import { clearRender, render, settled } from '@ember/test-helpers';
+import clickOver from 'dummy/tests/helpers/click-over';
+
 import hbs from 'htmlbars-inline-precompile';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:test');
@@ -62,7 +64,7 @@ module('Integration | Component | plot-ly', function (hooks) {
 
   test('it forwards plotly_click via events + onPlotlyEvent', async function (assert) {
     const done = assert.async();
-    assert.expect(3);
+    assert.expect(2);
 
     this.setProperties({
       chartData: [{
@@ -74,28 +76,28 @@ module('Integration | Component | plot-ly', function (hooks) {
          size: 32
        }
       }],
+      // FIXME: plotly.js seems to break under `transform: scale(...)`
+      // so we're "cheating" by moving the dot toward the "top left" of the plot area
+      // so we can compensate our click location for it
+      chartLayout: {
+        xaxis: {
+          range: [-1, 15]
+        },
+        yaxis: {
+          range: [-8, 1]
+        }
+      },
       plotlyEvents: ['plotly_click', 'plotly_restyle'],
       onPlotlyEvent(eventName) {
         assert.equal('plotly_click', eventName, 'Should receive plotly_click event');
         done();
       }
     });
-    await render(hbs`{{plot-ly chartData=chartData plotlyEvents=plotlyEvents onPlotlyEvent=onPlotlyEvent}}`);
-    //await waitFor('svg');
-    //await settled();
+    await render(hbs`{{plot-ly chartData=chartData chartLayout=chartLayout plotlyEvents=plotlyEvents onPlotlyEvent=onPlotlyEvent}}`);
+
     const dot = this.element.querySelector('svg.main-svg > g.cartesianlayer > g > g.plot > g.scatterlayer > g > g.points > path');
     assert.ok(dot, 'Found marker/dot element (virtual click target)');
-    const { x: dotX, y: dotY, width: dotWidth, height: dotHeight } = dot.getBoundingClientRect();
-    const crossHair = this.element.querySelector('.cursor-crosshair');
-    assert.ok(crossHair, 'Found crossHair element');
-
-    // FIXME: Extract this into test helper
-    const mouseEventProps = {
-      clientX: dotX + dotWidth/2,
-      clientY: dotY + dotHeight/2,
-    };
-    await triggerEvent(crossHair, 'mousedown', mouseEventProps);
-    await triggerEvent(crossHair, 'mouseup', mouseEventProps);
+    await clickOver(dot);
   });
 
   skip('it uses Plotly.restyle to apply updates', async function (assert) {
@@ -148,8 +150,6 @@ module('Integration | Component | plot-ly', function (hooks) {
       3, 'First trace should have 3 points');
     assert.equal(this.element.querySelectorAll(`${scatterLayerSelector} g.trace.scatter:last-child > g.points > path`).length,
       2, 'Second trace should have 2 points');
-    //debugger;
-    //await pauseTest();
   });
 
   skip('it updates the chart when the source data changes', async function (assert) {
@@ -210,6 +210,5 @@ module('Integration | Component | plot-ly', function (hooks) {
       1, 'There should be 1 (bar) trace now');
     assert.equal(this.element.querySelectorAll(`${scatterLayerSelector} g.trace.scatter`).length,
       1, 'There should be 1 (scatter) trace now');
-    await pauseTest();
   });
 });

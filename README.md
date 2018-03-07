@@ -4,9 +4,9 @@
 
 This addon strives to make it easy & efficient to use
 [plotly.js](https://plot.ly/javascript/) in Ember applications.
-If you want to It uses [ember-plotly-shim](https://github.com/brianhjelle/ember-plotly-shim)
-to import the library into the pipeline.
-As , declarative API 
+If you want to work with the plotly.js API directly then you may instead want to use
+[ember-plotly-shim](https://github.com/brianhjelle/ember-plotly-shim)
+to just import the library into the pipeline.
 
 ## Installation
 
@@ -14,7 +14,7 @@ As , declarative API
 ember install ember-cli-plotly
 ```
 
-## TODO: Write documentation
+## TODO: Write documentation / create github pages
 
 ## Usage
 
@@ -27,7 +27,6 @@ This example uses [`ember-array-helper`](https://github.com/kellyselden/ember-ar
 
 ```handlebars
 {{plot-ly
-  
   chartData=(array
     (hash
       name='y = 2x' 
@@ -48,21 +47,88 @@ This example uses [`ember-array-helper`](https://github.com/kellyselden/ember-ar
 ### Dynamic
 
 ```js
+// my-app/config/environment.js
+
+module.exports = function (environment) {
+  const ENV = {
+    // ...
+    // ember-cli-plotly
+    plotlyComponent: {
+      defaultOptions: {
+        // Override plotly defaults
+      }
+    },
+    // ember-plotly-shim
+    plotly: {
+      // See https://github.com/brianhjelle/ember-plotly-shim#usage
+    },
+    // ...
+  };
+  // ...
+  return ENV;
+};
+```
+
+```js
+// my-app/app/routes/somewhere.js
+import Route from '@ember/route';
+
+export default Route.extend({
+  model() {
+    return {
+      x: [1, 2, 3],
+      y: [2, 4, 6],
+      type: 'bar'
+    }
+  }
+});
+```
+
+```js
+// my-app/app/controllers/somewhere.js
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 
 export default Controller.extend({
-  chartData: computed('model.x', 'model.y', function() {
+  init() {
+    this._super(...arguments);
+    this.setProperties({
+      chartLayout: {
+        // Layout options
+        // See https://plot.ly/javascript/reference/#layout
+      },
+      chartOptions: {
+        // Override default options 
+        // See https://github.com/plotly/plotly.js/blob/master/src/plot_api/plot_config.js
+      }
+    });
+  },
+  chartData: computed('model.{x,y,type}', function() {
     return {
       x: this.get('model.x'),
       y: this.get('model.y'),
-      type: 'bar'
+      type: this.get('model.type')
     };
-  });
+  }),
+  onPlotlyEvent(eventName, ...args) {
+    const handler = {
+      plotly_click(...args) {
+        console.log('Received `plotly_click` event', ...args);
+      },
+      // ... 
+      // Can add handlers here for plotly events
+      // See https://plot.ly/javascript/plotlyjs-events/
+      // ...
+    }[eventName] || ((...args) => {
+      console.log(`No handler was defined for ${eventName}`, ...args);
+    });
+    handler(...args);
+  }
 });
 ```
 
 ```handlebars
+{{! my-app/app/templates/somewhere.hbs }}
 {{plot-ly
   chartData=chartData
   chartLayout=chartLayout

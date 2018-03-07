@@ -3,7 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
-import { clearRender, render, settled, pauseTest } from '@ember/test-helpers';
+import { clearRender, click, render, settled, pauseTest, triggerEvent, waitFor } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:test');
@@ -44,7 +44,7 @@ module('Integration | Component | plot-ly', function (hooks) {
       type: 'scatter'
     }];
     this.set('traces', traces);
-    await render(hbs`{{plot-ly traces=traces}}`);
+    await render(hbs`{{plot-ly chartData=traces}}`);
     assert.equal(this.element.querySelectorAll(legendEntrySelector).length,
       2, 'Legend should containe 2 entries');
     assert.ok(this.element.querySelector(scatterLayerSelector), 'Plot should contain scatterLayer');
@@ -60,7 +60,45 @@ module('Integration | Component | plot-ly', function (hooks) {
     assert.ok(true, '');
   });
 
-  test('it uses Plotly.restyle to apply updates', async function (assert) {
+  test('it forwards plotly_click via events + onPlotlyEvent', async function (assert) {
+    const done = assert.async();
+    assert.expect(3);
+
+    this.setProperties({
+      chartData: [{
+       x: [0],
+       y: [0],
+       type: 'scatter',
+       mode: 'markers',
+       marker: {
+         size: 32
+       }
+      }],
+      plotlyEvents: ['plotly_click', 'plotly_restyle'],
+      onPlotlyEvent(eventName) {
+        assert.equal('plotly_click', eventName, 'Should receive plotly_click event');
+        done();
+      }
+    });
+    await render(hbs`{{plot-ly chartData=chartData plotlyEvents=plotlyEvents onPlotlyEvent=onPlotlyEvent}}`);
+    //await waitFor('svg');
+    //await settled();
+    const dot = this.element.querySelector('svg.main-svg > g.cartesianlayer > g > g.plot > g.scatterlayer > g > g.points > path');
+    assert.ok(dot, 'Found marker/dot element (virtual click target)');
+    const { x: dotX, y: dotY, width: dotWidth, height: dotHeight } = dot.getBoundingClientRect();
+    const crossHair = this.element.querySelector('.cursor-crosshair');
+    assert.ok(crossHair, 'Found crossHair element');
+
+    // FIXME: Extract this into test helper
+    const mouseEventProps = {
+      clientX: dotX + dotWidth/2,
+      clientY: dotY + dotHeight/2,
+    };
+    await triggerEvent(crossHair, 'mousedown', mouseEventProps);
+    await triggerEvent(crossHair, 'mouseup', mouseEventProps);
+  });
+
+  skip('it uses Plotly.restyle to apply updates', async function (assert) {
     const traces = [{
       x: [1, 2, 3],
       y: [2, 4, 6],

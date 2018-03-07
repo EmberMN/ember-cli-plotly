@@ -1,3 +1,4 @@
+import { A } from '@ember/array';
 import Component from '@ember/component';
 import EmberObject, { computed, observer } from '@ember/object';
 import { map } from '@ember/object/computed';
@@ -70,6 +71,7 @@ const Trace = EmberObject.extend({
 
 export default Component.extend({
   layout,
+  // Lifecycle hooks
   init() {
     log('init');
     this._super(...arguments);
@@ -77,6 +79,8 @@ export default Component.extend({
   didReceiveAttrs() {
     log('didReceiveAttrs');
 
+    // FIXME
+    /*
     const traces = this.get('traces') || [];
     const replotEveryTime = this.get('replotEveryTime') || false;
     if (!replotEveryTime) {
@@ -88,23 +92,74 @@ export default Component.extend({
       //
       this.set('_hashes', _hashes);
     }
+    */
+
     this.setProperties({
-      traces,
-      title: this.get('title') || '',
-      xaxis: this.get('xaxis') || {},
-      yaxis: this.get('yaxis') || {},
-      options: extend(defaultOptions, this.get('options'))
+      chartData: this.get('chartData') || A(),
+      chartLayout: this.get('chartLayout') || EmberObject.create(),
+      chartOptions: extend(defaultOptions, this.get('chartOptions')),
+      plotlyEvents: this.get('plotlyEvents') || [],
     });
   },
   didInsertElement() {
     log('didInsertElement');
     //scheduleOnce('afterRender', this, '_newPlot');
   },
+  willUpdate() {
+    log('willUpdate');
+    this._unbindPlotlyEventListeners();
+  },
   didRender() {
     log('didRender');
-    // FIXME: Do we really have to re-draw the whole thing when we add/remove a trace?
-    scheduleOnce('afterRender', this, '_newPlot');
+    scheduleOnce('render', this, '_newPlot');
+    //scheduleOnce('afterRender', this, '_bindPlotlyEventListeners');
   },
+  willDestroyElement() {
+    log('willDestroyElement');
+    this._unbindPlotlyEventListeners();
+  },
+
+  // Consumers should override this if they want to handle plotly_events
+  onPlotlyEvent(eventName, ...args) {
+    log('onPlotlyEvent fired (does nothing since it was not overridden)', eventName, ...args);
+  },
+
+  // Private
+  _bindPlotlyEventListeners() {
+    const events = this.get('plotlyEvents');
+    log('_bindPlotlyEventListeners', events, this.element);
+    events.forEach((eventName) => {
+      // Note: Using plotly.js' 'on' method (copied from EventEmitter)
+      this.element.on(eventName, (...args) => this.onPlotlyEvent(eventName, ...args));
+    });
+  },
+  _unbindPlotlyEventListeners() {
+    const events = this.get('plotlyEvents');
+    log('_unbindPlotlyEventListeners', events, this.element);
+    events.forEach((eventName) => {
+      // Note: Using plotly.js' 'removeListener' method (copied from EventEmitter)
+      if (typeof this.element.removeListener === 'function') {
+        this.element.removeListener(eventName, this.onPlotlyEvent);
+      }
+    });
+  },
+
+  // DEBUG
+  /*
+  click() {
+    log('click');
+  },
+  plotlyClick() {
+    log('plotlyClick');
+  },
+  plotlyHover() {
+    log('plotlyHover', ...arguments);
+  },
+  plotlyBeforeHover() {
+    log('plotlyBeforeHover');
+  },
+  */
+
   _traces: map('traces', function(item) {
     log('_traces map running');
     return Trace.create(item);
@@ -116,22 +171,13 @@ export default Component.extend({
   _newPlot() {
     log('_newPlot');
     const id = this.elementId;
-    const data = this.get('traces').reduce((data, trace) => {
-      data.push({
-        x: trace.x,
-        y: trace.y,
-        type: trace.type
-      });
-      return data;
-    }, []);
-    const layout = {
-      title: this.get('title'),
-      xaxis: this.get('xaxis'),
-      yaxis: this.get('yaxis')
-    };
-    const options = this.get('options');
+    const data = this.get('chartData');
+    const layout = this.get('chartLayout');
+    const options = this.get('chartOptions');
+    this._unbindPlotlyEventListeners();
     Plotly.newPlot(id, data, layout, options).then(() => {
       log('newPlot finished');
+      this._bindPlotlyEventListeners();
     });
   },
   _addRemoveTrace(index) {
@@ -146,6 +192,7 @@ export default Component.extend({
       //debugger;
     });
   },
+
   actions: {
     traceDataChanged(index) {
       log('traceDataChanged', index);

@@ -48,15 +48,16 @@ This example uses [`ember-array-helper`](https://github.com/kellyselden/ember-ar
 
 ```js
 // my-app/config/environment.js
-
 module.exports = function (environment) {
   const ENV = {
     // ...
     // ember-cli-plotly
     plotlyComponent: {
       defaultOptions: {
-        // Override plotly defaults
-      }
+        // Override plotly.js defaults
+        displaylogo: false
+      },
+      defaultEvents: [/* list names of plotly events to forward by default */]
     },
     // ember-plotly-shim
     plotly: {
@@ -98,9 +99,11 @@ export default Controller.extend({
         // See https://plot.ly/javascript/reference/#layout
       },
       chartOptions: {
-        // Override default options 
+        // Override default options from config/environment.js & plotly.js
         // See https://github.com/plotly/plotly.js/blob/master/src/plot_api/plot_config.js
-      }
+      },
+      // Component will listen for these events and forward them via onPlotlyEvent
+      plotlyEvents: ['plotly_restyle']
     });
   },
   chartData: computed('model.{x,y,type}', function() {
@@ -112,8 +115,8 @@ export default Controller.extend({
   }),
   onPlotlyEvent(eventName, ...args) {
     const handler = {
-      plotly_click(...args) {
-        console.log('Received `plotly_click` event', ...args);
+      plotly_restyle(...args) {
+        console.log('Received `plotly_restyle` event', ...args);
       },
       // ... 
       // Can add handlers here for plotly events
@@ -138,7 +141,15 @@ export default Controller.extend({
 
 ```
 
+## Debugging
 
+This package uses [`ember-debug-logger`](https://github.com/salsify/ember-debug-logger)
+with the `ember-cli-plotly` namespace, so you should be able to use one of the following
+procedures to make debug messages visible (see [docs](https://github.com/visionmedia/debug)):
+
+* Run `require('debug').enable('ember-cli-plotly:*')` from DevTools console
+  (or manually set `localStorage.debug = 'ember-cli-plotly:*'`)
+* Set `DEBUG="ember-cli-plotly:*"` environment variable
 
 :warning: The information below was automatically generated
 (it needs to be updated)

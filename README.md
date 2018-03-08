@@ -1,6 +1,10 @@
 # ember-cli-plotly
 
 [![Build Status](https://travis-ci.org/EmberMN/ember-cli-plotly.svg?branch=master)](https://travis-ci.org/EmberMN/ember-cli-plotly)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+[![Ember Observer Score](https://emberobserver.com/badges/ember-cli-plotly.svg)](https://emberobserver.com/addons/ember-cli-plotly)
+[![Dependencies up to date](https://david-dm.org/EmberMN/ember-cli-plotly/status.svg.svg)](https://david-dm.org/EmberMN/ember-cli-plotly)
+
 
 This addon strives to make it easy & efficient to use
 [plotly.js](https://plot.ly/javascript/) in Ember applications.

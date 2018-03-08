@@ -75,31 +75,15 @@ export default Component.extend({
   init() {
     log('init');
     this._super(...arguments);
-  },
-  didReceiveAttrs() {
-    log('didReceiveAttrs');
-
-    // FIXME
-    /*
-    const traces = this.get('traces') || [];
-    const replotEveryTime = this.get('replotEveryTime') || false;
-    if (!replotEveryTime) {
-      const _hashes = this.get('_hashes') || {};
-
-      // 1 - compute hash of each trace
-      //     --> md5(JSON.stringify(Array.from(input_trace)))
-      // 2 - store
-      //
-      this.set('_hashes', _hashes);
-    }
-    */
-
     this.setProperties({
       chartData: this.get('chartData') || A(),
       chartLayout: this.get('chartLayout') || EmberObject.create(),
       chartOptions: extend(defaultOptions, this.get('chartOptions')),
       plotlyEvents: this.get('plotlyEvents') || [],
     });
+  },
+  didReceiveAttrs() {
+    log('didReceiveAttrs');
   },
   didInsertElement() {
     log('didInsertElement');

@@ -11,4 +11,7 @@ const App = Application.extend({
 
 loadInitializers(App, config.modulePrefix);
 
+import { run } from '@ember/runloop';
+run.backburner.DEBUG = true;
+
 export default App;

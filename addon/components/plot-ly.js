@@ -1,14 +1,12 @@
 import { A } from '@ember/array';
 import Component from '@ember/component';
-import EmberObject, { computed, observer } from '@ember/object';
-import { map } from '@ember/object/computed';
+import EmberObject from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';
 
 import { extend } from 'lodash';
 import Plotly from 'plotly';
-import md5 from 'md5';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:plot-ly-component');
 
@@ -55,20 +53,6 @@ const defaultOptions = {
   locale: 'en-US',
 };
 
-const Trace = EmberObject.extend({
-  x: null,
-  y: null,
-  hash: computed('x.[]', 'y.[]', {
-    get() {
-      //debugger;
-      return [
-        this.get('x').reduce(md5),
-        this.get('y').reduce(md5)
-      ].reduce(md5);
-    }
-  })
-});
-
 export default Component.extend({
   layout,
   // Lifecycle hooks
@@ -79,15 +63,8 @@ export default Component.extend({
       chartData: this.get('chartData') || A(),
       chartLayout: this.get('chartLayout') || EmberObject.create(),
       chartOptions: extend(defaultOptions, this.get('chartOptions')),
-      plotlyEvents: this.get('plotlyEvents') || [],
+      plotlyEvents: this.get('plotlyEvents') || [], // TODO: Get from config/env
     });
-  },
-  didReceiveAttrs() {
-    log('didReceiveAttrs');
-  },
-  didInsertElement() {
-    log('didInsertElement');
-    //scheduleOnce('afterRender', this, '_newPlot');
   },
   willUpdate() {
     log('willUpdate');
@@ -96,7 +73,6 @@ export default Component.extend({
   didRender() {
     log('didRender');
     scheduleOnce('render', this, '_newPlot');
-    //scheduleOnce('afterRender', this, '_bindPlotlyEventListeners');
   },
   willDestroyElement() {
     log('willDestroyElement');
@@ -110,9 +86,9 @@ export default Component.extend({
 
   // Private
   _bindPlotlyEventListeners() {
-    const events = this.get('plotlyEvents');
-    log('_bindPlotlyEventListeners', events, this.element);
-    events.forEach((eventName) => {
+    const plotlyEvents = this.get('plotlyEvents');
+    log('_bindPlotlyEventListeners', plotlyEvents, this.element);
+    plotlyEvents.forEach((eventName) => {
       // Note: Using plotly.js' 'on' method (copied from EventEmitter)
       this.element.on(eventName, (...args) => this.onPlotlyEvent(eventName, ...args));
     });
@@ -128,30 +104,7 @@ export default Component.extend({
     });
   },
 
-  // DEBUG
-  /*
-  click() {
-    log('click');
-  },
-  plotlyClick() {
-    log('plotlyClick');
-  },
-  plotlyHover() {
-    log('plotlyHover', ...arguments);
-  },
-  plotlyBeforeHover() {
-    log('plotlyBeforeHover');
-  },
-  */
-
-  _traces: map('traces', function(item) {
-    log('_traces map running');
-    return Trace.create(item);
-  }),
-  _debug: observer('_traces.@each.hash', function() {
-    log('_traces.@each.hash fired');
-  }),
-
+  // TODO: Eventually we'd like to be smarter about when to call `newPlot` vs `restyle` / `relayout`
   _newPlot() {
     log('_newPlot');
     const id = this.elementId;
@@ -163,32 +116,5 @@ export default Component.extend({
       log('newPlot finished');
       this._bindPlotlyEventListeners();
     });
-  },
-  _addRemoveTrace(index) {
-    log('_addRemoveTrace', index);
-    const id = this.elementId;
-    const trace = this.get('traces').objectAt(index);
-    Plotly.deleteTraces(id, index).then(() => {
-      log('Plotly.deleteTraces finished');
-      return Plotly.addTraces(id, trace, index);
-    }).then(() => {
-      log('Plotly.addTraces finished');
-      //debugger;
-    });
-  },
-
-  actions: {
-    traceDataChanged(index) {
-      log('traceDataChanged', index);
-      scheduleOnce('render', this, '_addRemoveTrace', index);
-    },
-    traceTypeChanged(index) {
-      log('traceTypeChanged', index);
-      const id = this.elementId;
-      const type = this.get('traces').objectAt(index).get('type');
-      Plotly.update(id, { type }).then(() => {
-        log('Plotly.update finished');
-      });
-    }
   }
 });

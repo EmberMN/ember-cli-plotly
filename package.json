@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-plotly",
-  "version": "0.0.2-debug.1",
+  "version": "0.0.2-debug.2",
   "description": "A basic charting component using Plotly.js",
   "keywords": [
     "ember-addon",
@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "ember-cli-babel": "^6.12.0",
-    "ember-cli-htmlbars": "^2.0.3"
+    "ember-cli-htmlbars": "^2.0.3",
+    "ember-plotly-shim": "0.0.2"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.6.0",
@@ -47,7 +48,6 @@
     "ember-lodash": "^4.18.0",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-md5": "^1.1.0",
-    "ember-plotly-shim": "0.0.2",
     "ember-resolver": "^4.5.2",
     "ember-source": "~3.0.0",
     "ember-source-channel-url": "^1.0.1",

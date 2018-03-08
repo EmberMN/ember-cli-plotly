@@ -1,12 +1,14 @@
 {
   "name": "ember-cli-plotly",
-  "version": "0.0.2",
+  "version": "0.0.3-SNAPSHOT",
   "description": "A basic charting component using Plotly.js",
   "keywords": [
     "ember-addon",
-    "data-visualization",
-    "chart",
-    "plotly"
+    "data-visualization", "visualization",
+    "chart", "charting",
+    "graph", "graphing",
+    "plot", "plotting",
+    "plotly", "plotly.js"
   ],
   "license": "MIT",
   "author": "Jacob Quant <jacobq@gmail.com>",

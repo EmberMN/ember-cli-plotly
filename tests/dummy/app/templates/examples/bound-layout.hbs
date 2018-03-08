@@ -1,0 +1,59 @@
+<p>Note that this example only demonstrates passing initial range values to plotly.js.
+It does not, for example, update those when the user adjusts the view in the plot.
+</p>
+<style>
+  /* for heaven's sake please don't really do styling here */
+  table {
+    width: 100%
+  }
+  input[type=range] {
+    width: calc(90% - 40px)
+  }
+  input[type=number] {
+    width: 40px;
+    margin-right: 10px;
+  }
+</style>
+<table>
+  <tbody>
+  <tr>
+    <th></th>
+    <th>min</th>
+    <th>max</th>
+  </tr>
+  <tr>
+    <td>X</td>
+    <td>
+      {{input type="range" min="-50" max="50" step="0.1" value=xaxis.min}}
+      {{input type="number" value=xaxis.min step=0.1}}
+    </td>
+    <td>
+      {{input type="number" value=xaxis.max step=0.1}}
+      {{input type="range" min="-50" max="50" step="0.1" value=xaxis.max}}
+    </td>
+  </tr>
+  <tr>
+    <td>Y</td>
+    <td>
+      {{input type="range" min="-50" max="50" step="0.1" value=yaxis.min}}
+      {{input type="number" value=yaxis.min step=0.1}}
+    </td>
+    <td>
+      {{input type="number" value=yaxis.max step=0.1}}
+      {{input type="range" min="-50" max="50" step="0.1" value=yaxis.max}}
+    </td>
+  </tr>
+  </tbody>
+</table>
+{{plot-ly
+  chartData=chartData
+  chartLayout=chartLayout
+}}
+
+Computed:<br>
+X: [{{chartLayout.xaxis.range}}]<br>
+Y: [{{chartLayout.yaxis.range}}]<br>
+
+Data: <br>
+x -> {{get chartData '0.x'}}<br>
+y -> {{get chartData '0.y'}}

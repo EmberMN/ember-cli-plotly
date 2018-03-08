@@ -4,7 +4,7 @@ import EmberObject, { computed } from '@ember/object';
 
 const n = 51;
 const x = new Array(n).fill(0).map((z,i) => 10*(2*i/(n-1) - 1)); // [-10, ..., 10]
-const noise = x.map(x => 10*(Math.random()-0.5));
+const noise = x.map(() => 10*(Math.random()-0.5));
 
 export default Controller.extend({
   init() {

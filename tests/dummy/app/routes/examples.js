@@ -8,6 +8,9 @@ export default Route.extend({
     }, {
       id: 'checkboxes',
       name: 'Computed via checkboxes'
+    }, {
+      id: 'bound-layout',
+      name: 'Bound layout'
     }];
   }
 });

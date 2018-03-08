@@ -10,6 +10,7 @@ Router.map(function() {
   this.route('examples', function() {
     this.route('static');
     this.route('checkboxes');
+    this.route('bound-layout');
   });
 });
 

@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-plotly",
-  "version": "0.0.3-SNAPSHOT",
+  "version": "0.0.3",
   "description": "A basic charting component using Plotly.js",
   "keywords": [
     "ember-addon",

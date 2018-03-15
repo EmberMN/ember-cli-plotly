@@ -14,6 +14,7 @@ Router.map(function() {
     this.route('blank');
     this.route('lasso');
     this.route('legend-events');
+    this.route('responsive');
   });
 });
 

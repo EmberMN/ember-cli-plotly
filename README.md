@@ -144,6 +144,7 @@ export default class SomeController extends Controller.extend({
   chartLayout=chartLayout
   chartOptions=chartOptions
   onPlotlyEvent=onPlotlyEvent
+  isResponsive=true
 }}
 
 ```

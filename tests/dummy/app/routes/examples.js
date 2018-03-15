@@ -13,13 +13,16 @@ export default Route.extend({
       name: 'Computed via checkboxes'
     }, {
       id: 'bound-layout',
-      name: 'Bound layout'
+      name: 'Chart layout details bound to computed properties'
     }, {
       id: 'lasso',
       name: 'Select traces with lasso'
     }, {
       id: 'legend-events',
       name: 'Handle legend click/doubleclick events'
+    }, {
+      id: 'responsive',
+      name: 'Responsive / fluid layout'
     }];
   }
 });

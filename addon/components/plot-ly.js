@@ -88,7 +88,8 @@ export default class PlotlyComponent extends Component.extend({
       chartData: this.get('chartData') || A(),
       chartLayout: this.get('chartLayout') || EmberObject.create(),
       chartOptions: extend(defaultOptions, this.get('chartOptions')),
-      plotlyEvents
+      isResponsive: !!this.get('isResponsive'),
+      plotlyEvents: this.get('plotlyEvents') || [], // TODO: Get from config/env
     });
     this._logUnrecognizedPlotlyEvents();
   },

@@ -34,7 +34,7 @@
     "ember-cli-htmlbars": "^2.0.3",
     "ember-debug-logger": "^1.1.0",
     "ember-lodash": "^4.18.0",
-    "ember-plotly-shim": "jacobq/ember-plotly-shim.git#debug"
+    "ember-plotly-shim": "brianhjelle/ember-plotly-shim#e0f971f405b51e0aaeadfdfdc29d51121b9e307a"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.6.0",

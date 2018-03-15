@@ -1,6 +1,26 @@
-{{plot-ly
-  chartData=chartData
-  chartLayout=chartLayout
-  chartOptions=chartOptions
-  isResponsive=true
-}}
+<style>
+  /* For real applications, use separate style files not inline style like this */
+  .responsive-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    border: 1px dashed deeppink;
+  }
+
+  .responsive-container > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+</style>
+
+<div class="responsive-container">
+  {{plot-ly
+    chartData=chartData
+    chartLayout=chartLayout
+    chartOptions=chartOptions
+    isResponsive=true
+  }}
+</div>

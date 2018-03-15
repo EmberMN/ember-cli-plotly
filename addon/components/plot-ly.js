@@ -2,13 +2,14 @@ import { A } from '@ember/array';
 import Component from '@ember/component';
 import EmberObject, { observer } from '@ember/object';
 //import { observes } from '@ember-decorators/object';
-import { scheduleOnce } from '@ember/runloop';
+import { debounce, scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';
 
 import { extend } from 'lodash';
 import Plotly from 'plotly';
 import debug from 'debug';
+
 const log = debug('ember-cli-plotly:plot-ly-component');
 const warn = debug('ember-cli-plotly:plot-ly-component');
 /* eslint-disable no-console */
@@ -81,9 +82,8 @@ export default class PlotlyComponent extends Component.extend({
   // TODO: Figure out how to re-write this in ES2015 class form
   init() {
     this._super(...arguments);
-    log('init');
     this.set('layout', layout);
-    const plotlyEvents = this.get('plotlyEvents') || []; // TODO: Get from config/env
+
     this.setProperties({
       chartData: this.get('chartData') || A(),
       chartLayout: this.get('chartLayout') || EmberObject.create(),
@@ -92,6 +92,14 @@ export default class PlotlyComponent extends Component.extend({
       plotlyEvents: this.get('plotlyEvents') || [], // TODO: Get from config/env
     });
     this._logUnrecognizedPlotlyEvents();
+
+    this.set('_resizeEventHandler', () => {
+      log('_resizeEventHandler');
+      debounce(this, () => {
+        log('debounced _resizeEventHandler');
+        scheduleOnce('afterRender', this, '_onResize');
+      }, 200);  // TODO: Make throttling/debouncing/whatever more flexible/configurable
+    });
   },
 
   // Private
@@ -132,7 +140,16 @@ export default class PlotlyComponent extends Component.extend({
   }
 
   // Private
+  _onResize() {
+    log('_onResize');
+    Plotly.Plots.resize(this.elementId);
+  }
+
   _bindPlotlyEventListeners() {
+    if (this.get('isResponsive')) {
+      window.addEventListener('resize', this._resizeEventHandler);
+    }
+
     const plotlyEvents = this.get('plotlyEvents');
     log('_bindPlotlyEventListeners', plotlyEvents, this.element);
     plotlyEvents.forEach((eventName) => {
@@ -142,6 +159,7 @@ export default class PlotlyComponent extends Component.extend({
   }
 
   _unbindPlotlyEventListeners() {
+    window.removeEventListener('resize', this._resizeEventHandler);
     const events = this.get('plotlyEvents');
     log('_unbindPlotlyEventListeners', events, this.element);
     events.forEach((eventName) => {

@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 
-const n = 10001;
+const n = 1001;
 const x = new Array(n).fill(0).map((z,i) => 10*(2*i/(n-1) - 1)); // [-10, ..., 10]
 const getNormalDistPDF = (mu, sigma) => {
   // See PDF equation here: https://en.wikipedia.org/wiki/Log-normal_distribution

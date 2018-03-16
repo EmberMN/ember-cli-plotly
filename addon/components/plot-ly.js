@@ -1,6 +1,6 @@
 import { A } from '@ember/array';
 import Component from '@ember/component';
-import EmberObject from '@ember/object';
+import EmberObject, { observer } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';
@@ -53,19 +53,47 @@ const defaultOptions = {
   locale: 'en-US',
 };
 
+const knownPlotlyEvents = [
+  'afterplot',
+  'animated',
+  'autosize',
+  'click',
+  'deselect',
+  'doubleclick',
+  'redraw',
+  'relayout',
+  'restyle',
+  'selected',
+].map(suffix => `plotly_${suffix}`);
+
 export default Component.extend({
   layout,
   // Lifecycle hooks
   init() {
     log('init');
     this._super(...arguments);
+    const plotlyEvents = this.get('plotlyEvents') || []; // TODO: Get from config/env
     this.setProperties({
       chartData: this.get('chartData') || A(),
       chartLayout: this.get('chartLayout') || EmberObject.create(),
       chartOptions: extend(defaultOptions, this.get('chartOptions')),
-      plotlyEvents: this.get('plotlyEvents') || [], // TODO: Get from config/env
+      plotlyEvents
     });
+    this._logUnrecognizedPlotlyEvents();
   },
+  _logUnrecognizedPlotlyEvents: observer('plotlyEvents.[]', function() {
+    const plotlyEvents = this.get('plotlyEvents');
+    if (plotlyEvents && typeof plotlyEvents.forEach === 'function') {
+      plotlyEvents.forEach(eventName => {
+        if (!knownPlotlyEvents.find(name => name === eventName)) {
+          log(`Passing unrecognized plotly event: '${eventName}'`);
+        }
+      });
+    }
+    else {
+      log(`plotlyEvents does not appear to be an array`, plotlyEvents);
+    }
+  }),
   willUpdate() {
     log('willUpdate');
     this._unbindPlotlyEventListeners();

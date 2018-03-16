@@ -12,6 +12,7 @@ Router.map(function() {
     this.route('checkboxes');
     this.route('bound-layout');
     this.route('blank');
+    this.route('lasso');
   });
 });
 

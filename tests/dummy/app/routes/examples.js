@@ -14,6 +14,9 @@ export default Route.extend({
     }, {
       id: 'bound-layout',
       name: 'Bound layout'
+    }, {
+      id: 'lasso',
+      name: 'Select traces with lasso'
     }];
   }
 });

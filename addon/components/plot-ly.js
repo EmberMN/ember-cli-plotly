@@ -60,10 +60,13 @@ const knownPlotlyEvents = [
   'click',
   'deselect',
   'doubleclick',
+  'hover',
   'redraw',
   'relayout',
   'restyle',
   'selected',
+  'selecting',
+  'unhover',
 ].map(suffix => `plotly_${suffix}`);
 
 export default Component.extend({

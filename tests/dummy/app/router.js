@@ -11,6 +11,7 @@ Router.map(function() {
     this.route('static');
     this.route('checkboxes');
     this.route('bound-layout');
+    this.route('blank');
   });
 });
 

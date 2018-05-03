@@ -1,6 +1,7 @@
 import { A } from '@ember/array';
 import Component from '@ember/component';
-import EmberObject, { observer } from '@ember/object';
+import EmberObject from '@ember/object';
+import { observes } from '@ember-decorators/object';
 import { scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';
@@ -69,12 +70,13 @@ const knownPlotlyEvents = [
   'unhover',
 ].map(suffix => `plotly_${suffix}`);
 
-export default Component.extend({
-  layout,
+//export default Component.extend({
+export default class PlotlyComponent extends Component {
   // Lifecycle hooks
-  init() {
+  constructor() {
     log('init');
-    this._super(...arguments);
+    super(...arguments);
+    this.set('layout', layout);
     const plotlyEvents = this.get('plotlyEvents') || []; // TODO: Get from config/env
     this.setProperties({
       chartData: this.get('chartData') || A(),
@@ -83,8 +85,31 @@ export default Component.extend({
       plotlyEvents
     });
     this._logUnrecognizedPlotlyEvents();
-  },
-  _logUnrecognizedPlotlyEvents: observer('plotlyEvents.[]', function() {
+  }
+
+  willUpdate() {
+    log('willUpdate');
+    this._unbindPlotlyEventListeners();
+  }
+
+  didRender() {
+    log('didRender');
+    scheduleOnce('render', this, '_newPlot');
+  }
+
+  willDestroyElement() {
+    log('willDestroyElement');
+    this._unbindPlotlyEventListeners();
+  }
+
+  // Consumers should override this if they want to handle plotly_events
+  onPlotlyEvent(eventName, ...args) {
+    log('onPlotlyEvent fired (does nothing since it was not overridden)', eventName, ...args);
+  }
+
+  // Private
+  @observes('plotlyEvents.[]')
+  _logUnrecognizedPlotlyEvents() {
     const plotlyEvents = this.get('plotlyEvents');
     if (plotlyEvents && typeof plotlyEvents.forEach === 'function') {
       plotlyEvents.forEach(eventName => {
@@ -96,26 +121,8 @@ export default Component.extend({
     else {
       log(`plotlyEvents does not appear to be an array`, plotlyEvents);
     }
-  }),
-  willUpdate() {
-    log('willUpdate');
-    this._unbindPlotlyEventListeners();
-  },
-  didRender() {
-    log('didRender');
-    scheduleOnce('render', this, '_newPlot');
-  },
-  willDestroyElement() {
-    log('willDestroyElement');
-    this._unbindPlotlyEventListeners();
-  },
+  }
 
-  // Consumers should override this if they want to handle plotly_events
-  onPlotlyEvent(eventName, ...args) {
-    log('onPlotlyEvent fired (does nothing since it was not overridden)', eventName, ...args);
-  },
-
-  // Private
   _bindPlotlyEventListeners() {
     const plotlyEvents = this.get('plotlyEvents');
     log('_bindPlotlyEventListeners', plotlyEvents, this.element);
@@ -123,7 +130,8 @@ export default Component.extend({
       // Note: Using plotly.js' 'on' method (copied from EventEmitter)
       this.element.on(eventName, (...args) => this.onPlotlyEvent(eventName, ...args));
     });
-  },
+  }
+
   _unbindPlotlyEventListeners() {
     const events = this.get('plotlyEvents');
     log('_unbindPlotlyEventListeners', events, this.element);
@@ -133,7 +141,7 @@ export default Component.extend({
         this.element.removeListener(eventName, this.onPlotlyEvent);
       }
     });
-  },
+  }
 
   // TODO: Eventually we'd like to be smarter about when to call `newPlot` vs `restyle` / `relayout`
   _newPlot() {
@@ -148,4 +156,4 @@ export default Component.extend({
       this._bindPlotlyEventListeners();
     });
   }
-});
+}

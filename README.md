@@ -110,6 +110,7 @@ export default Controller.extend({
       plotlyEvents: ['plotly_restyle']
     });
   },
+  // FIXME: Use new computed property "getter" syntax
   chartData: computed('model.{x,y,type}', function() {
     return {
       x: this.get('model.x'),

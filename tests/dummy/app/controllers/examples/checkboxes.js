@@ -1,14 +1,15 @@
 import { A } from '@ember/array';
 import Controller from '@ember/controller';
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
+import { computed } from '@ember-decorators/object';
 
 const n = 51;
 const x = new Array(n).fill(0).map((z,i) => 10*(2*i/(n-1) - 1)); // [-10, ..., 10]
 const noise = x.map(() => 10*(Math.random()-0.5));
 
-export default Controller.extend({
-  init() {
-    this._super(...arguments);
+export default class CheckBoxesController extends Controller {
+  constructor() {
+    super(...arguments);
 
     // In this example the x & y arrays here should be considered static
     // (that is, the `chartData` computed property is not "watching" them)
@@ -40,9 +41,11 @@ export default Controller.extend({
         x,y: noise
       }
     ].map(s => EmberObject.create(s))));
-  },
-  chartData: computed('dataSets.@each.isPassedToPlotly', function() {
+  }
+
+  @computed('dataSets.@each.isPassedToPlotly')
+  get chartData() {
     const dataSets = this.get('dataSets');
     return dataSets.filterBy('isPassedToPlotly', true);
-  })
-});
+  }
+}

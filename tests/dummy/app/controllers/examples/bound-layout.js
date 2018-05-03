@@ -1,14 +1,14 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { computed } from '@ember-decorators/object';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:plot-ly-component');
 
 const n = Math.pow(2,16);
 const x = new Array(n).fill(0).map((z,i) => 100*(2*i/(n-1)-1)); // [-10, ..., 10]
 
-export default Controller.extend({
-  init() {
-    this._super(...arguments);
+export default class BoundLayoutController extends Controller {
+  constructor() {
+    super(...arguments);
     this.setProperties({
       xaxis: {
         min: -10,
@@ -49,8 +49,10 @@ export default Controller.extend({
         }
       ]
     });
-  },
-  chartLayout: computed('xaxis.{min,max}', 'yaxis.{min,max}', function() {
+  }
+
+  @computed('xaxis.{min,max}', 'yaxis.{min,max}')
+  get chartLayout() {
     log('computing chartLayout');
     const getRange = (axisPropName) => {
       let min = parseFloat(this.get(`${axisPropName}.min`));
@@ -70,5 +72,5 @@ export default Controller.extend({
         range: getRange('yaxis')
       }
     };
-  })
-});
+  }
+}

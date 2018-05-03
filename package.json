@@ -33,10 +33,12 @@
     "ember-cli-babel": "^6.12.0",
     "ember-cli-htmlbars": "^2.0.3",
     "ember-debug-logger": "^1.1.0",
+    "ember-decorators": "^2.0.0",
     "ember-lodash": "^4.18.0",
     "ember-plotly-shim": "brianhjelle/ember-plotly-shim#e0f971f405b51e0aaeadfdfdc29d51121b9e307a"
   },
   "devDependencies": {
+    "@ember-decorators/babel-transforms": "^2.0.0",
     "broccoli-asset-rev": "^2.6.0",
     "ember-ajax": "^3.0.0",
     "ember-cli": "~3.1.3",

@@ -18,6 +18,9 @@ export default Route.extend({
       id: 'lasso',
       name: 'Select traces with lasso'
     }, {
+      id: 'live-data',
+      name: 'Update chart as "live" data is generated'
+    }, {
       id: 'legend-events',
       name: 'Handle legend click/doubleclick events'
     }, {

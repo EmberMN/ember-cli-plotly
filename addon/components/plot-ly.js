@@ -116,7 +116,13 @@ export default class PlotlyComponent extends Component.extend({
     else {
       log(`plotlyEvents does not appear to be an array`, plotlyEvents);
     }
+  }),
+
+  _triggerUpdate: observer('chartData.triggerUpdate', function() {
+    log(`_triggerUpdate observer firing`);
+    this._updateChart();
   })
+
 }) {
   // Lifecycle hooks
   willUpdate() {
@@ -172,15 +178,25 @@ export default class PlotlyComponent extends Component.extend({
 
   // TODO: Eventually we'd like to be smarter about when to call `newPlot` vs `restyle` / `relayout`
   _newPlot() {
-    log('_newPlot');
     const id = this.elementId;
     const data = this.get('chartData');
     const layout = this.get('chartLayout');
     const options = this.get('chartOptions');
     this._unbindPlotlyEventListeners();
+    log('About to call Plotly.react for the first time');
     Plotly.newPlot(id, data, layout, options).then(() => {
       log('newPlot finished');
       this._bindPlotlyEventListeners();
     });
+  }
+
+  _updateChart() {
+    const id = this.elementId;
+    const data = this.get('chartData');
+    const layout = this.get('chartLayout');
+    const options = this.get('chartOptions');
+    log('About to call Plotly.react (again?)');
+    layout.datarevision = layout.datarevision + 1; // Force update
+    Plotly.react(id, data, layout, options);
   }
 }

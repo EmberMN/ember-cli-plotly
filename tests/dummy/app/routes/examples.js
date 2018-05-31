@@ -17,6 +17,9 @@ export default Route.extend({
     }, {
       id: 'lasso',
       name: 'Select traces with lasso'
+    }, {
+      id: 'legend-events',
+      name: 'Handle legend click/doubleclick events'
     }];
   }
 });

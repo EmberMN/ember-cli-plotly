@@ -1,41 +1,15 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember-decorators/object';
+import generateDataSets from 'dummy/utils/datasets'
 
 import * as debug from 'debug';
 const log = debug('ember-cli-plotly:dummy:lasso');
-
-const n = 101;
-const x = new Array(n).fill(0).map((z,i) => 5*(2*i/(n-1) - 1)); // [-5, ..., 5]
 
 export default class LassoExampleController extends Controller.extend({
   init() {
     this._super(...arguments);
     this.setProperties({
-      chartData: [{
-        name: 'y = -5',
-        x,
-        y: x.map(() => -5)
-      }, {
-        name: 'y = 2x-1',
-        x,
-        y: x.map(x => 2*x-1)
-      }, {
-        name: 'y = 1.5x',
-        x,
-        y: x.map(x => 1.5*x)
-      }, {
-        name: 'y = -1.8x + noise',
-        x,
-        y: x.map(x => -1.8*x + 2*(1-Math.random()))
-      }, {
-        name: 'y = 1/x',
-        x,
-        y: x.map(x => 1/x),
-      }, {
-        name: 'y = x*sin(2*x)',
-        x,
-        y: x.map(x => x*Math.sin(2*x)),
-      }].map(trace => Object.assign(trace, {
+      chartData: generateDataSets().map(trace => Object.assign(trace, {
         mode: 'lines+markers',
         line: {
           shape: 'spline'

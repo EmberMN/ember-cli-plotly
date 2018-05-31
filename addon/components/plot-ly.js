@@ -10,6 +10,10 @@ import { extend } from 'lodash';
 import Plotly from 'plotly';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:plot-ly-component');
+const warn = debug('ember-cli-plotly:plot-ly-component');
+/* eslint-disable no-console */
+warn.log = console.warn.bind(console);
+/* eslint-enable no-console */
 
 // TODO: Make configurable via ENV
 // https://github.com/plotly/plotly.js/blob/5bc25b490702e5ed61265207833dbd58e8ab27f1/src/plot_api/plot_config.js#L22-L184
@@ -62,6 +66,8 @@ const knownPlotlyEvents = [
   'deselect',
   'doubleclick',
   'hover',
+  'legendclick',
+  'legenddoubleclick',
   'redraw',
   'relayout',
   'restyle',
@@ -94,7 +100,7 @@ export default class PlotlyComponent extends Component.extend({
     if (plotlyEvents && typeof plotlyEvents.forEach === 'function') {
       plotlyEvents.forEach(eventName => {
         if (!knownPlotlyEvents.find(name => name === eventName)) {
-          log(`Passing unrecognized plotly event: '${eventName}'`);
+          warn(`Passing unrecognized plotly event: '${eventName}'`);
         }
       });
     }

@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/EmberMN/ember-cli-plotly.svg?branch=master)](https://travis-ci.org/EmberMN/ember-cli-plotly)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 [![Ember Observer Score](https://emberobserver.com/badges/ember-cli-plotly.svg)](https://emberobserver.com/addons/ember-cli-plotly)
-[![Dependencies up to date](https://david-dm.org/EmberMN/ember-cli-plotly/status.svg.svg)](https://david-dm.org/EmberMN/ember-cli-plotly)
+[![Dependencies up to date](https://david-dm.org/EmberMN/ember-cli-plotly/status.svg)](https://david-dm.org/EmberMN/ember-cli-plotly)
 
 
 This addon strives to make it easy & efficient to use
@@ -92,9 +92,9 @@ export default Route.extend({
 ```js
 // my-app/app/controllers/somewhere.js
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { computed } from '@ember-decorators/object';
 
-export default Controller.extend({
+export default class SomeController extends Controller.extend({
   init() {
     this._super(...arguments);
     this.setProperties({
@@ -109,15 +109,17 @@ export default Controller.extend({
       // Component will listen for these events and forward them via onPlotlyEvent
       plotlyEvents: ['plotly_restyle']
     });
-  },
-  // FIXME: Use new computed property "getter" syntax
-  chartData: computed('model.{x,y,type}', function() {
+  }
+}) {
+  @computed('model.{x,y,type}')
+  get chartData() {
     return {
       x: this.get('model.x'),
       y: this.get('model.y'),
       type: this.get('model.type')
     };
-  }),
+  }
+  
   onPlotlyEvent(eventName, ...args) {
     const handler = {
       plotly_restyle(...args) {
@@ -132,7 +134,7 @@ export default Controller.extend({
     });
     handler(...args);
   }
-});
+}
 ```
 
 ```handlebars

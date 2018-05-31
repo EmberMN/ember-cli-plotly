@@ -1,7 +1,7 @@
 import { A } from '@ember/array';
 import Component from '@ember/component';
-import EmberObject from '@ember/object';
-import { observes } from '@ember-decorators/object';
+import EmberObject, { observer } from '@ember/object';
+//import { observes } from '@ember-decorators/object';
 import { scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';
@@ -71,11 +71,11 @@ const knownPlotlyEvents = [
 ].map(suffix => `plotly_${suffix}`);
 
 //export default Component.extend({
-export default class PlotlyComponent extends Component {
-  // Lifecycle hooks
-  constructor() {
+export default class PlotlyComponent extends Component.extend({
+  // TODO: Figure out how to re-write this in ES2015 class form
+  init() {
+    this._super(...arguments);
     log('init');
-    super(...arguments);
     this.set('layout', layout);
     const plotlyEvents = this.get('plotlyEvents') || []; // TODO: Get from config/env
     this.setProperties({
@@ -85,8 +85,25 @@ export default class PlotlyComponent extends Component {
       plotlyEvents
     });
     this._logUnrecognizedPlotlyEvents();
-  }
+  },
 
+  // Private
+  // TODO: Use @observes decorator once it is available
+  _logUnrecognizedPlotlyEvents: observer('plotlyEvents.[]', function() {
+    const plotlyEvents = this.get('plotlyEvents');
+    if (plotlyEvents && typeof plotlyEvents.forEach === 'function') {
+      plotlyEvents.forEach(eventName => {
+        if (!knownPlotlyEvents.find(name => name === eventName)) {
+          log(`Passing unrecognized plotly event: '${eventName}'`);
+        }
+      });
+    }
+    else {
+      log(`plotlyEvents does not appear to be an array`, plotlyEvents);
+    }
+  })
+}) {
+  // Lifecycle hooks
   willUpdate() {
     log('willUpdate');
     this._unbindPlotlyEventListeners();
@@ -108,21 +125,6 @@ export default class PlotlyComponent extends Component {
   }
 
   // Private
-  @observes('plotlyEvents.[]')
-  _logUnrecognizedPlotlyEvents() {
-    const plotlyEvents = this.get('plotlyEvents');
-    if (plotlyEvents && typeof plotlyEvents.forEach === 'function') {
-      plotlyEvents.forEach(eventName => {
-        if (!knownPlotlyEvents.find(name => name === eventName)) {
-          log(`Passing unrecognized plotly event: '${eventName}'`);
-        }
-      });
-    }
-    else {
-      log(`plotlyEvents does not appear to be an array`, plotlyEvents);
-    }
-  }
-
   _bindPlotlyEventListeners() {
     const plotlyEvents = this.get('plotlyEvents');
     log('_bindPlotlyEventListeners', plotlyEvents, this.element);

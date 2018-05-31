@@ -3099,13 +3099,13 @@ ember-md5@^1.1.0:
     blueimp-md5 "^2.10.0"
     ember-cli-babel "6.11.0"
 
-ember-plotly-shim@brianhjelle/ember-plotly-shim#e0f971f405b51e0aaeadfdfdc29d51121b9e307a:
-  version "0.0.2"
-  resolved "https://codeload.github.com/brianhjelle/ember-plotly-shim/tar.gz/e0f971f405b51e0aaeadfdfdc29d51121b9e307a"
+ember-plotly-shim@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/ember-plotly-shim/-/ember-plotly-shim-0.0.4.tgz#4b69cf74a1eee59d126311681c0a59985cf2260f"
   dependencies:
     broccoli-funnel "^1.1.0"
     broccoli-merge-trees "^2.0.0"
-    ember-cli-babel "^6.6.0"
+    ember-cli-babel "^6.12.0"
     lodash.defaults "^4.2.0"
     plotly.js "^1.25.0"
 

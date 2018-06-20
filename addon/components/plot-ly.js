@@ -83,7 +83,9 @@ export default class PlotlyComponent extends Component.extend({
   init() {
     this._super(...arguments);
     this.set('layout', layout);
+  },
 
+  didReceiveAttrs() {
     this.setProperties({
       chartData: this.get('chartData') || A(),
       chartLayout: this.get('chartLayout') || EmberObject.create(),
@@ -100,6 +102,7 @@ export default class PlotlyComponent extends Component.extend({
         scheduleOnce('afterRender', this, '_onResize');
       }, 200);  // TODO: Make throttling/debouncing/whatever more flexible/configurable
     });
+
   },
 
   // Private
@@ -183,7 +186,7 @@ export default class PlotlyComponent extends Component.extend({
     const layout = this.get('chartLayout');
     const options = this.get('chartOptions');
     this._unbindPlotlyEventListeners();
-    log('About to call Plotly.react for the first time');
+    log('About to call Plotly.newPlot');
     Plotly.newPlot(id, data, layout, options).then(() => {
       log('newPlot finished');
       this._bindPlotlyEventListeners();
@@ -195,7 +198,7 @@ export default class PlotlyComponent extends Component.extend({
     const data = this.get('chartData');
     const layout = this.get('chartLayout');
     const options = this.get('chartOptions');
-    log('About to call Plotly.react (again?)');
+    log('About to call Plotly.react');
     layout.datarevision = layout.datarevision + 1; // Force update
     Plotly.react(id, data, layout, options);
   }

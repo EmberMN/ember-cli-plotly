@@ -13,6 +13,7 @@ export default class ExamplesLiveDataController extends Controller.extend({
   init() {
     this._super(...arguments);
     this.setProperties({
+      _updating: false,
       chartData: A(),
       //chartLayout: {},
       //chartOptions: {},
@@ -20,15 +21,13 @@ export default class ExamplesLiveDataController extends Controller.extend({
       currentTrace: 0,
       currentIndex: 0
     });
-
-    later(this, 'update', interval);
   }
 }) {
   update() {
-    // FIXME: Stop this from running itself forever
-    //if (this.get('_stopUpdating')) {
-    //  return;
-    //}
+    log('update firing');
+    if (!this.get('_updating')) {
+      return;
+    }
 
     const currentTrace = this.get('currentTrace');
     const currentIndex = this.get('currentIndex');
@@ -56,6 +55,32 @@ export default class ExamplesLiveDataController extends Controller.extend({
       this.set('currentIndex', 1 + currentIndex);
     }
     later(this, 'update', interval);
+  }
+
+
+  @action
+  clear() {
+    log(`Clear clicked`);
+    this.setProperties({
+      currentTrace: 0,
+      currentIndex: 0
+    });
+    this.get('chartData').clear();
+  }
+
+  @action
+  start() {
+    log(`Start clicked`, this.get('_updating'));
+    if (this.get('_updating') === false) {
+      this.set('_updating', true);
+      later(this, 'update', interval);
+    }
+  }
+
+  @action
+  stop() {
+    log(`Stop clicked`);
+    this.set('_updating', false);
   }
 
   @action

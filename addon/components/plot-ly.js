@@ -6,11 +6,11 @@ import { debounce, scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';
 
-import { extend } from 'lodash';
 import Plotly from 'plotly';
 import debug from 'debug';
 
 const log = debug('ember-cli-plotly:plot-ly-component');
+//const logVerbose = debug('ember-cli-plotly:plot-ly-component:verbose');
 const warn = debug('ember-cli-plotly:plot-ly-component');
 /* eslint-disable no-console */
 warn.log = console.warn.bind(console);
@@ -77,35 +77,29 @@ const knownPlotlyEvents = [
   'unhover',
 ].map(suffix => `plotly_${suffix}`);
 
+function _mergeWithDefaults(props) {
+  // FIXME: Seems like a hack-y way to make this work with Object.merge...
+  if (props.chartData === undefined) {
+    delete props.chartData;
+  }
+  if (props.chartLayout === undefined) {
+    delete props.chartLayout;
+  }
+  if (props.chartOptions === undefined) {
+    delete props.chartOptions;
+  }
+
+  return Object.assign({
+    chartData: A(),
+    chartLayout: EmberObject.create(),
+    chartOptions: Object.assign(defaultOptions, props.chartOptions),
+    isResponsive: !!props.isResponsive,
+    plotlyEvents: props.plotlyEvents || []
+  }, props);
+}
+
 //export default Component.extend({
 export default class PlotlyComponent extends Component.extend({
-  // TODO: Figure out how to re-write this in ES2015 class form
-  init() {
-    this._super(...arguments);
-    this.set('layout', layout);
-  },
-
-  didReceiveAttrs() {
-    this.setProperties({
-      chartData: this.get('chartData') || A(),
-      chartLayout: this.get('chartLayout') || EmberObject.create(),
-      chartOptions: extend(defaultOptions, this.get('chartOptions')),
-      isResponsive: !!this.get('isResponsive'),
-      plotlyEvents: this.get('plotlyEvents') || [], // TODO: Get from config/env
-    });
-    this._logUnrecognizedPlotlyEvents();
-
-    this.set('_resizeEventHandler', () => {
-      log('_resizeEventHandler');
-      debounce(this, () => {
-        log('debounced _resizeEventHandler');
-        scheduleOnce('afterRender', this, '_onResize');
-      }, 200);  // TODO: Make throttling/debouncing/whatever more flexible/configurable
-    });
-
-  },
-
-  // Private
   // TODO: Use @observes decorator once it is available
   _logUnrecognizedPlotlyEvents: observer('plotlyEvents.[]', function() {
     const plotlyEvents = this.get('plotlyEvents');
@@ -123,24 +117,60 @@ export default class PlotlyComponent extends Component.extend({
 
   _triggerUpdate: observer('chartData.triggerUpdate', function() {
     log(`_triggerUpdate observer firing`);
-    this._updateChart();
+    scheduleOnce('render', this, '_react');
   })
-
 }) {
+
+  constructor(props) {
+    super(_mergeWithDefaults(props));
+    this.set('layout', layout);
+    this.set('_resizeEventHandler', () => {
+      log('_resizeEventHandler');
+      debounce(this, () => {
+        log('debounced _resizeEventHandler');
+        scheduleOnce('afterRender', this, '_onResize');
+      }, 200);  // TODO: Make throttling/debouncing/whatever more flexible/configurable
+    });
+    this._logUnrecognizedPlotlyEvents();
+  }
+
   // Lifecycle hooks
+  //didReceiveAttrs() {
+  //  this._super(...arguments);
+  //  log('didReceiveAttrs called', this.get('data'));
+  //}
+
+  didUpdateAttrs() {
+    //this._super(...arguments);
+    log('didUpdateAttrs called');
+    scheduleOnce('render', this, () => {
+      this.setProperties(_mergeWithDefaults({
+        chartData: this.get('chartData'),
+        chartLayout: this.get('chartLayout'),
+        chartOptions: this.get('chartOptions'),
+      }));
+    });
+  }
+
+  didInsertElement() {
+    //log('didRender called -- will call _newPlot');
+    //scheduleOnce('render', this, '_newPlot');
+  }
+
   willUpdate() {
-    log('willUpdate');
-    this._unbindPlotlyEventListeners();
+    //log('willUpdate called');
+    //this._unbindPlotlyEventListeners();
   }
 
   didRender() {
-    log('didRender');
-    scheduleOnce('render', this, '_newPlot');
+    log('didRender called -- will call _react', this);
+    scheduleOnce('render', this, '_react');
   }
 
   willDestroyElement() {
-    log('willDestroyElement');
+    log('willDestroyElement called -- unbinding event listeners and calling Plotly.purge');
     this._unbindPlotlyEventListeners();
+    Plotly.purge(this.elementId);
   }
 
   // Consumers should override this if they want to handle plotly_events
@@ -183,7 +213,6 @@ export default class PlotlyComponent extends Component.extend({
     return !this.element || !this.elementId || this.get('isDestroying') || this.get('isDestroyed');
   }
 
-  // TODO: Eventually we'd like to be smarter about when to call `newPlot` vs `restyle` / `relayout`
   _newPlot() {
     if (this._isDomElementBad()) {
       warn(`_newPlot aborting since element (or its ID) is not available or component is (being) destroyed.`);
@@ -201,8 +230,7 @@ export default class PlotlyComponent extends Component.extend({
     });
   }
 
-  // TODO: Probably should use "Plot" instead of "Chart" to keep naming consistent
-  _updateChart() {
+  _react() {
     if (this._isDomElementBad()) {
       warn(`_updateChart aborting since element (or its ID) is not available or component is (being) destroyed.`);
       return;
@@ -212,7 +240,12 @@ export default class PlotlyComponent extends Component.extend({
     const layout = this.get('chartLayout');
     const options = this.get('chartOptions');
     log('About to call Plotly.react');
-    layout.datarevision = layout.datarevision + 1; // Force update
-    Plotly.react(id, data, layout, options);
+    try {
+      layout.datarevision = layout.datarevision + 1; // Force update
+      Plotly.react(id, data, layout, options);
+    } catch (e) {
+      // FIXME: This seems to happen because we can't/don't ensure that attrs get sanitized first (e.g. layout is undefined)
+      warn('Caught exception', e);
+    }
   }
 }

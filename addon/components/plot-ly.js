@@ -179,8 +179,16 @@ export default class PlotlyComponent extends Component.extend({
     });
   }
 
+  _isDomElementBad() {
+    return !this.element || !this.elementId || this.get('isDestroying') || this.get('isDestroyed');
+  }
+
   // TODO: Eventually we'd like to be smarter about when to call `newPlot` vs `restyle` / `relayout`
   _newPlot() {
+    if (this._isDomElementBad()) {
+      warn(`_newPlot aborting since element (or its ID) is not available or component is (being) destroyed.`);
+      return;
+    }
     const id = this.elementId;
     const data = this.get('chartData');
     const layout = this.get('chartLayout');
@@ -193,7 +201,12 @@ export default class PlotlyComponent extends Component.extend({
     });
   }
 
+  // TODO: Probably should use "Plot" instead of "Chart" to keep naming consistent
   _updateChart() {
+    if (this._isDomElementBad()) {
+      warn(`_updateChart aborting since element (or its ID) is not available or component is (being) destroyed.`);
+      return;
+    }
     const id = this.elementId;
     const data = this.get('chartData');
     const layout = this.get('chartLayout');

@@ -77,30 +77,19 @@ const knownPlotlyEvents = [
   'unhover',
 ].map(suffix => `plotly_${suffix}`);
 
+// TODO: Write test?
 function _mergeWithDefaults(props) {
-  // FIXME: Seems like a hack-y way to make this work with Object.merge...
-  if (props.chartData === undefined) {
-    delete props.chartData;
-  }
-  if (props.chartLayout === undefined) {
-    delete props.chartLayout;
-  }
-  if (props.chartOptions === undefined) {
-    delete props.chartOptions;
-  }
-
-  const result = Object.assign({
-    chartData: A(),
-    chartLayout: EmberObject.create(),
+  const result = Object.assign({}, props, {
+    chartData: props.chartData || A(),
+    chartLayout: props.chartLayout || EmberObject.create(),
     chartOptions: Object.assign(defaultOptions, props.chartOptions),
     isResponsive: !!props.isResponsive,
     plotlyEvents: props.plotlyEvents || []
-  }, props);
+  });
   log(`_mergeWithDefaults returning`, result);
   return result;
 }
 
-//export default Component.extend({
 export default class PlotlyComponent extends Component.extend({
   // TODO: Use @observes decorator once it is available
   _logUnrecognizedPlotlyEvents: observer('plotlyEvents.[]', function() {
@@ -137,19 +126,17 @@ export default class PlotlyComponent extends Component.extend({
   }
 
   // Lifecycle hooks
-  //didReceiveAttrs() {
-  //  this._super(...arguments);
-  //  log('didReceiveAttrs called', this.get('data'));
-  //}
 
   didUpdateAttrs() {
-    //this._super(...arguments);
+    //this._super(...arguments); // Are we supposed to call this on life cycle hooks?
     log('didUpdateAttrs called');
+    // FIXME: Ideally, we should be able to intercept the new attrs before they get set on the component
     scheduleOnce('render', this, () => {
       this.setProperties(_mergeWithDefaults({
         chartData: this.get('chartData'),
         chartLayout: this.get('chartLayout'),
         chartOptions: this.get('chartOptions'),
+        plotlyEvents: this.get('plotlyEvents')
       }));
     });
   }
@@ -196,7 +183,7 @@ export default class PlotlyComponent extends Component.extend({
 
   _unbindPlotlyEventListeners() {
     window.removeEventListener('resize', this._resizeEventHandler);
-    const events = this.get('plotlyEvents');
+    const events = this.getWithDefault('plotlyEvents', []);
     log('_unbindPlotlyEventListeners', events, this.element);
     events.forEach((eventName) => {
       // Note: Using plotly.js' 'removeListener' method (copied from EventEmitter)

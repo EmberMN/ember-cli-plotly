@@ -194,6 +194,7 @@ export default class PlotlyComponent extends Component.extend({
     Plotly.newPlot(id, chartData, chartLayout, chartOptions).then(() => {
       log('newPlot finished');
       this._bindPlotlyEventListeners();
+      // TODO: Hook
     });
   }
 
@@ -204,13 +205,11 @@ export default class PlotlyComponent extends Component.extend({
     }
     const id = this.elementId;
     const { chartData, chartLayout, chartOptions } = this.get('_parameters');
-    log('About to call Plotly.react');
-    try {
-      layout.datarevision = layout.datarevision + 1; // Force update
-      Plotly.react(id, chartData, chartLayout, chartOptions);
-    } catch (e) {
-      // FIXME: This seems to happen because we can't/don't ensure that attrs get sanitized first (e.g. layout is undefined)
-      warn('Caught exception', e);
-    }
+    log('About to call Plotly.react', chartData[0].x, chartData[0].y);
+    chartLayout.datarevision = chartLayout.datarevision + 1; // Force update
+    Plotly.react(id, chartData, chartLayout, chartOptions).then(() => {
+      log('react finished');
+      // TODO: Hook
+    });
   }
 }

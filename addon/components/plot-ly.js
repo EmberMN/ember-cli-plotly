@@ -173,7 +173,7 @@ export default class PlotlyComponent extends Component.extend({
       window.addEventListener('resize', this._resizeEventHandler);
     }
 
-    const plotlyEvents = this.get('plotlyEvents');
+    const plotlyEvents = this.getWithDefault('plotlyEvents', []);
     log('_bindPlotlyEventListeners', plotlyEvents, this.element);
     plotlyEvents.forEach((eventName) => {
       // Note: Using plotly.js' 'on' method (copied from EventEmitter)

@@ -64,9 +64,10 @@ module('Integration | Component | plot-ly', function (hooks) {
 
   test('it forwards plotly_click via events + onPlotlyEvent', async function (assert) {
     const done = assert.async();
-    assert.expect(2);
+    assert.expect(2); // First check the dot's existence, then make sure we got the click event
 
     this.setProperties({
+      // Put a big dot at the origin
       chartData: [{
        x: [0],
        y: [0],
@@ -89,6 +90,7 @@ module('Integration | Component | plot-ly', function (hooks) {
       },
       plotlyEvents: ['plotly_click', 'plotly_restyle'],
       onPlotlyEvent(eventName) {
+        log(`onPlotlyEvent('${eventName}') fired`);
         assert.equal('plotly_click', eventName, 'Should receive plotly_click event');
         done();
       }

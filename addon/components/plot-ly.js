@@ -89,13 +89,15 @@ function _mergeWithDefaults(props) {
     delete props.chartOptions;
   }
 
-  return Object.assign({
+  const result = Object.assign({
     chartData: A(),
     chartLayout: EmberObject.create(),
     chartOptions: Object.assign(defaultOptions, props.chartOptions),
     isResponsive: !!props.isResponsive,
     plotlyEvents: props.plotlyEvents || []
   }, props);
+  log(`_mergeWithDefaults returning`, result);
+  return result;
 }
 
 //export default Component.extend({
@@ -153,17 +155,12 @@ export default class PlotlyComponent extends Component.extend({
   }
 
   didInsertElement() {
-    //log('didRender called -- will call _newPlot');
-    //scheduleOnce('render', this, '_newPlot');
+    log('didInsertElement called -- will call _newPlot');
+    scheduleOnce('render', this, '_newPlot');
   }
 
-  willUpdate() {
-    //log('willUpdate called');
-    //this._unbindPlotlyEventListeners();
-  }
-
-  didRender() {
-    log('didRender called -- will call _react', this);
+  didUpdate() {
+    log('didUpdate called -- will call _react', this);
     scheduleOnce('render', this, '_react');
   }
 

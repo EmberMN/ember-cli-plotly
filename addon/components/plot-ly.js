@@ -1,7 +1,7 @@
 import { A } from '@ember/array';
 import Component from '@ember/component';
 import EmberObject, { observer } from '@ember/object';
-//import { observes } from '@ember-decorators/object';
+import { computed } from '@ember-decorators/object';
 import { debounce, scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';
@@ -10,7 +10,6 @@ import Plotly from 'plotly';
 import debug from 'debug';
 
 const log = debug('ember-cli-plotly:plot-ly-component');
-//const logVerbose = debug('ember-cli-plotly:plot-ly-component:verbose');
 const warn = debug('ember-cli-plotly:plot-ly-component');
 /* eslint-disable no-console */
 warn.log = console.warn.bind(console);
@@ -77,20 +76,6 @@ const knownPlotlyEvents = [
   'unhover',
 ].map(suffix => `plotly_${suffix}`);
 
-// TODO: Write test?
-function _mergeWithDefaults(props) {
-  props = props || {};
-  const result = Object.assign({}, props, {
-    chartData: props.chartData || A(),
-    chartLayout: props.chartLayout || EmberObject.create(),
-    chartOptions: Object.assign(defaultOptions, props.chartOptions),
-    isResponsive: !!props.isResponsive,
-    plotlyEvents: props.plotlyEvents || []
-  });
-  log(`_mergeWithDefaults returning`, result);
-  return result;
-}
-
 export default class PlotlyComponent extends Component.extend({
   // TODO: Use @observes decorator once it is available
   _logUnrecognizedPlotlyEvents: observer('plotlyEvents.[]', function() {
@@ -113,8 +98,8 @@ export default class PlotlyComponent extends Component.extend({
   })
 }) {
 
-  constructor(props) {
-    super(_mergeWithDefaults(props));
+  constructor(...args) {
+    super(...args);
     this.set('layout', layout);
     this.set('_resizeEventHandler', () => {
       log('_resizeEventHandler');
@@ -126,22 +111,12 @@ export default class PlotlyComponent extends Component.extend({
     this._logUnrecognizedPlotlyEvents();
   }
 
-  // Lifecycle hooks
-
-  didUpdateAttrs() {
-    //this._super(...arguments); // Are we supposed to call this on life cycle hooks?
-    log('didUpdateAttrs called');
-    // FIXME: Ideally, we should be able to intercept the new attrs before they get set on the component
-    scheduleOnce('render', this, () => {
-      this.setProperties(_mergeWithDefaults({
-        chartData: this.get('chartData'),
-        chartLayout: this.get('chartLayout'),
-        chartOptions: this.get('chartOptions'),
-        plotlyEvents: this.get('plotlyEvents')
-      }));
-    });
+  // Consumers should override this if they want to handle plotly_events
+  onPlotlyEvent(eventName, ...args) {
+    log('onPlotlyEvent fired (does nothing since it was not overridden)', eventName, ...args);
   }
 
+  // Lifecycle hooks
   didInsertElement() {
     log('didInsertElement called -- will call _newPlot');
     scheduleOnce('render', this, '_newPlot');
@@ -158,19 +133,28 @@ export default class PlotlyComponent extends Component.extend({
     Plotly.purge(this.elementId);
   }
 
-  // Consumers should override this if they want to handle plotly_events
-  onPlotlyEvent(eventName, ...args) {
-    log('onPlotlyEvent fired (does nothing since it was not overridden)', eventName, ...args);
+  // Private
+  // Merge user-provided parameters with defaults
+  @computed('chartData', 'chartLayout', 'chartOptions', 'isResponsive', 'plotlyEvents')
+  get _parameters() {
+    const parameters = Object.assign({}, {
+      chartData: this.get('chartData') || A(),
+      chartLayout: this.get('chartLayout') || EmberObject.create(),
+      chartOptions: Object.assign(defaultOptions, this.get('chartOptions')),
+      isResponsive: !!this.get('isResponsive'),
+      plotlyEvents: this.get('plotlyEvents') || []
+    });
+    log(`computing parameters =`, parameters);
+    return parameters;
   }
 
-  // Private
   _onResize() {
     log('_onResize');
     Plotly.Plots.resize(this.elementId);
   }
 
   _bindPlotlyEventListeners() {
-    if (this.get('isResponsive')) {
+    if (this.get('_parameters.isResponsive')) {
       window.addEventListener('resize', this._resizeEventHandler);
     }
 
@@ -204,12 +188,10 @@ export default class PlotlyComponent extends Component.extend({
       return;
     }
     const id = this.elementId;
-    const data = this.get('chartData');
-    const layout = this.get('chartLayout');
-    const options = this.get('chartOptions');
+    const { chartData, chartLayout, chartOptions } = this.get('_parameters');
     this._unbindPlotlyEventListeners();
     log('About to call Plotly.newPlot');
-    Plotly.newPlot(id, data, layout, options).then(() => {
+    Plotly.newPlot(id, chartData, chartLayout, chartOptions).then(() => {
       log('newPlot finished');
       this._bindPlotlyEventListeners();
     });
@@ -221,13 +203,11 @@ export default class PlotlyComponent extends Component.extend({
       return;
     }
     const id = this.elementId;
-    const data = this.get('chartData');
-    const layout = this.get('chartLayout');
-    const options = this.get('chartOptions');
+    const { chartData, chartLayout, chartOptions } = this.get('_parameters');
     log('About to call Plotly.react');
     try {
       layout.datarevision = layout.datarevision + 1; // Force update
-      Plotly.react(id, data, layout, options);
+      Plotly.react(id, chartData, chartLayout, chartOptions);
     } catch (e) {
       // FIXME: This seems to happen because we can't/don't ensure that attrs get sanitized first (e.g. layout is undefined)
       warn('Caught exception', e);

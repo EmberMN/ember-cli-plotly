@@ -16,6 +16,7 @@ Router.map(function() {
     this.route('legend-events');
     this.route('responsive');
     this.route('live-data');
+    this.route('live-colors');
   });
 });
 

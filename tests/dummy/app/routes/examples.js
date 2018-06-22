@@ -21,6 +21,9 @@ export default Route.extend({
       id: 'live-data',
       name: 'Update chart as "live" data is generated'
     }, {
+      id: 'live-colors',
+      name: 'Change colors of traces dynamically'
+    }, {
       id: 'legend-events',
       name: 'Handle legend click/doubleclick events'
     }, {

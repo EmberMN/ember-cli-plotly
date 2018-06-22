@@ -1,4 +1,3 @@
-import { A } from '@ember/array';
 import Component from '@ember/component';
 import EmberObject, { observer } from '@ember/object';
 import { computed } from '@ember-decorators/object';
@@ -97,7 +96,6 @@ export default class PlotlyComponent extends Component.extend({
     scheduleOnce('render', this, '_react');
   })
 }) {
-
   constructor(...args) {
     super(...args);
     this.set('layout', layout);
@@ -114,6 +112,7 @@ export default class PlotlyComponent extends Component.extend({
   // Consumers should override this if they want to handle plotly_events
   onPlotlyEvent(eventName, ...args) {
     log('onPlotlyEvent fired (does nothing since it was not overridden)', eventName, ...args);
+
   }
 
   // Lifecycle hooks
@@ -138,8 +137,8 @@ export default class PlotlyComponent extends Component.extend({
   @computed('chartData', 'chartLayout', 'chartConfig', 'isResponsive', 'plotlyEvents')
   get _parameters() {
     const parameters = Object.assign({}, {
-      chartData: this.get('chartData') || A(),
-      chartLayout: this.get('chartLayout') || EmberObject.create(),
+      chartData: this.get('chartData'),
+      chartLayout: this.get('chartLayout') || document.getElementById(this.elementId).layout || EmberObject.create({ datarevision: 0 }),
       chartConfig: Object.assign(defaultConfig, this.get('chartConfig')),
       isResponsive: !!this.get('isResponsive'),
       plotlyEvents: this.get('plotlyEvents') || []
@@ -195,18 +194,21 @@ export default class PlotlyComponent extends Component.extend({
       log('newPlot finished');
       this._bindPlotlyEventListeners();
       // TODO: Hook
+    }).catch((e, ...args) => {
+      warn(`Plotly.newPlot resulted in rejected promise`, e, ...args);
     });
   }
 
   _react() {
     if (this._isDomElementBad()) {
-      warn(`_updateChart aborting since element (or its ID) is not available or component is (being) destroyed.`);
+      warn(`_react aborting since element (or its ID) is not available or component is (being) destroyed.`);
       return;
     }
     const id = this.elementId;
     const { chartData, chartLayout, chartConfig } = this.get('_parameters');
-    log('About to call Plotly.react');
-    chartLayout.datarevision = chartLayout.datarevision + 1; // Force update
+    // Force update
+    chartLayout.datarevision += 1;
+    log('About to call Plotly.react', chartData, chartLayout, chartConfig);
     Plotly.react(id, chartData, chartLayout, chartConfig).then(() => {
       log('react finished');
       // TODO: Hook

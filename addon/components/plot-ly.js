@@ -79,6 +79,7 @@ const knownPlotlyEvents = [
 
 // TODO: Write test?
 function _mergeWithDefaults(props) {
+  props = props || {};
   const result = Object.assign({}, props, {
     chartData: props.chartData || A(),
     chartLayout: props.chartLayout || EmberObject.create(),

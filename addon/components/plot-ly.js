@@ -6,7 +6,7 @@ import { debounce, scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';
 
-import Plotly from 'plotly';
+import Plotly from 'plotly.js';
 import debug from 'debug';
 
 const log = debug('ember-cli-plotly:plot-ly-component');

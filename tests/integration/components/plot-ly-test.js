@@ -10,7 +10,7 @@ import hbs from 'htmlbars-inline-precompile';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:test');
 
-import Plotly from 'plotly';
+import Plotly from 'plotly.js';
 
 module('Integration | Component | plot-ly', function (hooks) {
   setupRenderingTest(hooks);

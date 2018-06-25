@@ -8,9 +8,6 @@
 
 This addon strives to make it easy & efficient to use
 [plotly.js](https://plot.ly/javascript/) in Ember applications.
-If you want to work with the plotly.js API directly then you may instead want to use
-[ember-plotly-shim](https://github.com/brianhjelle/ember-plotly-shim)
-to just import the library into the pipeline.
 
 ## Installation
 
@@ -49,6 +46,7 @@ This example uses [`ember-array-helper`](https://github.com/kellyselden/ember-ar
 ```
 
 ### Dynamic
+(See the [examples in the 'dummy app'](./tests/dummy/app/controllers/examples/))
 
 ```js
 // my-app/config/environment.js
@@ -62,10 +60,6 @@ module.exports = function (environment) {
         displaylogo: false
       },
       defaultEvents: [/* list names of plotly events to forward by default */]
-    },
-    // ember-plotly-shim
-    plotly: {
-      // See https://github.com/brianhjelle/ember-plotly-shim#usage
     },
     // ...
   };

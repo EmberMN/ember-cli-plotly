@@ -41,7 +41,7 @@ export default Controller.extend({
           //range: [-15, 15]
         }
       },
-      chartOptions: {}
+      chartConfig: {}
     });
   },
 });

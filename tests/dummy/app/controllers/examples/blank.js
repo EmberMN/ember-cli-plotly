@@ -9,7 +9,7 @@ export default Controller.extend({
         xaxis: {},
         yaxis: {}
       },
-      chartOptions: {}
+      chartConfig: {}
     });
   },
 });

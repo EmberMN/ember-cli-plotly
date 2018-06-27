@@ -17,7 +17,7 @@ warn.log = console.warn.bind(console);
 
 // TODO: Make configurable via ENV
 // https://github.com/plotly/plotly.js/blob/5bc25b490702e5ed61265207833dbd58e8ab27f1/src/plot_api/plot_config.js#L22-L184
-const defaultOptions = {
+const defaultConfig = {
   staticPlot: false,
   editable: true,
   edits: {
@@ -135,12 +135,12 @@ export default class PlotlyComponent extends Component.extend({
 
   // Private
   // Merge user-provided parameters with defaults
-  @computed('chartData', 'chartLayout', 'chartOptions', 'isResponsive', 'plotlyEvents')
+  @computed('chartData', 'chartLayout', 'chartConfig', 'isResponsive', 'plotlyEvents')
   get _parameters() {
     const parameters = Object.assign({}, {
       chartData: this.get('chartData') || A(),
       chartLayout: this.get('chartLayout') || EmberObject.create(),
-      chartOptions: Object.assign(defaultOptions, this.get('chartOptions')),
+      chartConfig: Object.assign(defaultConfig, this.get('chartConfig')),
       isResponsive: !!this.get('isResponsive'),
       plotlyEvents: this.get('plotlyEvents') || []
     });
@@ -188,10 +188,10 @@ export default class PlotlyComponent extends Component.extend({
       return;
     }
     const id = this.elementId;
-    const { chartData, chartLayout, chartOptions } = this.get('_parameters');
+    const { chartData, chartLayout, chartConfig } = this.get('_parameters');
     this._unbindPlotlyEventListeners();
     log('About to call Plotly.newPlot');
-    Plotly.newPlot(id, chartData, chartLayout, chartOptions).then(() => {
+    Plotly.newPlot(id, chartData, chartLayout, chartConfig).then(() => {
       log('newPlot finished');
       this._bindPlotlyEventListeners();
       // TODO: Hook
@@ -204,12 +204,14 @@ export default class PlotlyComponent extends Component.extend({
       return;
     }
     const id = this.elementId;
-    const { chartData, chartLayout, chartOptions } = this.get('_parameters');
-    log('About to call Plotly.react', chartData[0].x, chartData[0].y);
+    const { chartData, chartLayout, chartConfig } = this.get('_parameters');
+    log('About to call Plotly.react');
     chartLayout.datarevision = chartLayout.datarevision + 1; // Force update
-    Plotly.react(id, chartData, chartLayout, chartOptions).then(() => {
+    Plotly.react(id, chartData, chartLayout, chartConfig).then(() => {
       log('react finished');
       // TODO: Hook
+    }).catch((e, ...args) => {
+      warn(`Plotly.react resulted in rejected promise`, e, ...args);
     });
   }
 }

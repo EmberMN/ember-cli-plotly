@@ -18,7 +18,7 @@ export default class LassoExampleController extends Controller.extend({
       chartLayout: {
         dragmode: 'lasso'
       },
-      chartOptions: {
+      chartConfig: {
       },
       plotlyEvents: ['plotly_selected'],
       selectedPoints: [],

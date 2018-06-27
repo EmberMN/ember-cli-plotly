@@ -50,12 +50,13 @@ This example uses [`ember-array-helper`](https://github.com/kellyselden/ember-ar
 
 ```js
 // my-app/config/environment.js
+// FIXME: Configuring this addon here is not yet supported :(
 module.exports = function (environment) {
   const ENV = {
     // ...
     // ember-cli-plotly
     plotlyComponent: {
-      defaultOptions: {
+      defaultConfig: {
         // Override plotly.js defaults
         displaylogo: false
       },
@@ -96,7 +97,7 @@ export default class SomeController extends Controller.extend({
         // Layout options
         // See https://plot.ly/javascript/reference/#layout
       },
-      chartOptions: {
+      chartConfig: {
         // Override default options from config/environment.js & plotly.js
         // See https://github.com/plotly/plotly.js/blob/master/src/plot_api/plot_config.js
       },
@@ -136,7 +137,7 @@ export default class SomeController extends Controller.extend({
 {{plot-ly
   chartData=chartData
   chartLayout=chartLayout
-  chartOptions=chartOptions
+  chartConfig=chartConfig
   onPlotlyEvent=onPlotlyEvent
   isResponsive=true
 }}

@@ -12,7 +12,7 @@ export default class ExamplesLegendEventsController extends Controller.extend({
     this.setProperties({
       chartData: generateDataSets(),
       //chartLayout: {},
-      //chartOptions: {},
+      //chartConfig: {},
       plotlyEvents: ['plotly_legendclick','plotly_legenddoubleclick'],
       lastClicked: null,
       lastDoubleClicked: null,

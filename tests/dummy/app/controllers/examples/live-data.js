@@ -16,7 +16,7 @@ export default class ExamplesLiveDataController extends Controller.extend({
       _updating: false,
       chartData: A(),
       //chartLayout: {},
-      //chartOptions: {},
+      //chartConfig: {},
       plotlyEvents: ['plotly_restyle'],
       currentTrace: 0,
       currentIndex: 0

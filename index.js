@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-cli-plotly',
+  name: require('./package').name,
 
   // Magic incantation from https://github.com/ember-decorators/ember-decorators/issues/96#issuecomment-307318090
   init: function(app) {

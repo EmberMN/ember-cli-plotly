@@ -1,12 +1,13 @@
 <ul>
-{{#each dataSets as |dataSet|}}
-  <li>{{input type="checkbox" name=dataSet.name checked=dataSet.isPassedToPlotly}}
-    <label for={{dataSet.name}}>{{dataSet.name}}</label>
-  </li>
-{{/each}}
+  {{#each dataSets as |dataSet|}}
+    <li>
+      {{input type="checkbox" name=dataSet.name checked=dataSet.isPassedToPlotly}}
+      <label for={{dataSet.name}}>{{dataSet.name}}</label>
+    </li>
+  {{/each}}
 </ul>
 {{plot-ly
-  foo='bar'
+  foo="bar"
   chartData=chartData
   chartLayout=chartLayout
   chartConfig=chartConfig

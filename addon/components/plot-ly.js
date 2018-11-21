@@ -1,6 +1,6 @@
 import Component from '@ember/component';
-import EmberObject, { observer } from '@ember/object';
-import { computed } from '@ember-decorators/object';
+import EmberObject from '@ember/object';
+import { computed, observes } from '@ember-decorators/object';
 import { debounce, scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';
@@ -75,27 +75,7 @@ const knownPlotlyEvents = [
   'unhover',
 ].map(suffix => `plotly_${suffix}`);
 
-export default class PlotlyComponent extends Component.extend({
-  // TODO: Use @observes decorator once it is available
-  _logUnrecognizedPlotlyEvents: observer('plotlyEvents.[]', function() {
-    const plotlyEvents = this.get('plotlyEvents');
-    if (plotlyEvents && typeof plotlyEvents.forEach === 'function') {
-      plotlyEvents.forEach(eventName => {
-        if (!knownPlotlyEvents.find(name => name === eventName)) {
-          warn(`Passing unrecognized plotly event: '${eventName}'`);
-        }
-      });
-    }
-    else {
-      log(`plotlyEvents does not appear to be an array`, plotlyEvents);
-    }
-  }),
-
-  _triggerUpdate: observer('chartData.triggerUpdate', function() {
-    log(`_triggerUpdate observer firing`);
-    scheduleOnce('render', this, '_react');
-  })
-}) {
+export default class PlotlyComponent extends Component {
   constructor(...args) {
     super(...args);
     this.set('layout', layout);
@@ -132,7 +112,30 @@ export default class PlotlyComponent extends Component.extend({
     Plotly.purge(this.elementId);
   }
 
+
   // Private
+  @observes('plotlyEvents.[]')
+  _logUnrecognizedPlotlyEvents() {
+    const plotlyEvents = this.get('plotlyEvents');
+    if (plotlyEvents && typeof plotlyEvents.forEach === 'function') {
+      plotlyEvents.forEach(eventName => {
+        if (!knownPlotlyEvents.find(name => name === eventName)) {
+          warn(`Passing unrecognized plotly event: '${eventName}'`);
+        }
+      });
+    }
+    else {
+      log(`plotlyEvents does not appear to be an array`, plotlyEvents);
+    }
+  }
+
+  @observes('chartData.triggerUpdate')
+  _triggerUpdate() {
+    log(`_triggerUpdate observer firing`);
+    scheduleOnce('render', this, '_react');
+  }
+
+
   // Merge user-provided parameters with defaults
   @computed('chartData', 'chartLayout', 'chartConfig', 'isResponsive', 'plotlyEvents')
   get _parameters() {

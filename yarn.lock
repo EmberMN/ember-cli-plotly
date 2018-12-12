@@ -267,7 +267,7 @@
     "@babel/helper-create-class-features-plugin" "^7.2.1"
     "@babel/helper-plugin-utils" "^7.0.0"
 
-"@babel/plugin-proposal-decorators@^7.1.2", "@babel/plugin-proposal-decorators@^7.2.0":
+"@babel/plugin-proposal-decorators@^7.1.2":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-decorators/-/plugin-proposal-decorators-7.2.0.tgz#6b4278282a6f5dd08b5d89b94f21aa1671fea071"
   integrity sha512-yrDmvCsOMvNPpjCC6HMseiac2rUuQdeNqUyPU+3QbW7gLg/APX0c/7l9i/aulSICJQOkP6/4EHxkcB4d4DqZhg==

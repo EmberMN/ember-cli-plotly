@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-plotly",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A basic charting component using Plotly.js",
   "keywords": [
     "ember-addon",
@@ -31,21 +31,20 @@
     "test:all": "ember try:each"
   },
   "dependencies": {
-    "ember-auto-import": "^1.2.15",
-    "ember-cli-babel": "^6.16.0",
+    "@ember-decorators/babel-transforms": "^3.1.5",
+    "ember-auto-import": "^1.2.19",
+    "ember-cli-babel": "^7.2.0",
     "ember-cli-htmlbars": "^3.0.1",
     "ember-debug-logger": "^2.0.0",
-    "ember-decorators": "^3.1.0",
-    "ember-lodash": "^4.19.1",
+    "ember-decorators": "^3.1.5",
+    "ember-lodash": "^4.19.4",
     "plotly.js": "^1.42.5"
   },
   "devDependencies": {
-    "@ember-decorators/babel-transforms": "^2.0.2",
     "@ember/optional-features": "^0.7.0",
     "babel-eslint": "^10.0.1",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-ajax": "^4.0.0",
-    "ember-cli": "~3.5.1",
+    "ember-cli": "~3.6.0",
     "ember-cli-dependency-checker": "^3.0.0",
     "ember-cli-eslint": "^5.0.0",
     "ember-cli-htmlbars-inline-precompile": "^2.0.0",
@@ -62,16 +61,16 @@
     "ember-md5": "^1.2.0",
     "ember-qunit": "^4.1.2",
     "ember-resolver": "^5.0.1",
-    "ember-source": "~3.5.1",
+    "ember-source": "~3.6.0",
     "ember-source-channel-url": "^1.1.0",
     "ember-truth-helpers": "^2.1.0",
     "ember-try": "^1.1.0",
     "eslint-plugin-ember": "^6.0.1",
     "eslint-plugin-node": "^8.0.0",
     "loader.js": "^4.7.0",
-    "qunit-dom": "^0.8.0",
+    "qunit-dom": "^0.8.3",
     "safe-json-stringify": "^1.2.0",
-    "testdouble": "^3.9.0"
+    "testdouble": "^3.9.1"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"

@@ -4490,10 +4490,10 @@ ember-cli-test-loader@^2.2.0:
   dependencies:
     ember-cli-babel "^6.8.1"
 
-ember-cli-testdouble@0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/ember-cli-testdouble/-/ember-cli-testdouble-0.1.3.tgz#2cff62e21d7202be945ad055977667929a4a0226"
-  integrity sha512-GtlNRBtL1HGGRrYa6n+YwJs8Tx5IQGgp1pk5BL3xY9u2xptIwQWf01jYJB4AhA3XfgeWQWuFqaO04CAX4o8xXw==
+ember-cli-testdouble@0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/ember-cli-testdouble/-/ember-cli-testdouble-0.1.4.tgz#fac95c45a1567f70929521051e049091c198292d"
+  integrity sha512-bzgyduq9X5mCCEXK6KffpmYIaOGis0l9oQACiKiijo8RXLqSuZro0T/f9ifIzoT3J2tfvNPzYBwCY4VzUagBcw==
   dependencies:
     broccoli-funnel "^1.2.0"
     broccoli-merge-trees "^2.0.0"

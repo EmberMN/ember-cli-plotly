@@ -1,5 +1,5 @@
-window.deprecationWorkflow = window.deprecationWorkflow || {};
-window.deprecationWorkflow.config = {
+self.deprecationWorkflow = self.deprecationWorkflow || {};
+self.deprecationWorkflow.config = {
   workflow: [
     { handler: "silence", matchId: "deprecate-router-events" } // See https://github.com/ebryn/ember-component-css/issues/309
   ]

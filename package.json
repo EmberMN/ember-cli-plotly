@@ -31,12 +31,12 @@
     "test:all": "ember try:each"
   },
   "dependencies": {
-    "@ember-decorators/babel-transforms": "5.1.1",
+    "@ember-decorators/babel-transforms": "5.1.2",
     "ember-auto-import": "1.2.19",
     "ember-cli-babel": "7.4.0",
     "ember-cli-htmlbars": "3.0.1",
     "ember-debug-logger": "2.0.0",
-    "ember-decorators": "5.1.1",
+    "ember-decorators": "5.1.2",
     "ember-lodash": "4.19.4",
     "plotly.js": "1.44.0"
   },

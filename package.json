@@ -33,7 +33,7 @@
   "dependencies": {
     "@ember-decorators/babel-transforms": "5.2.0",
     "ember-auto-import": "1.2.21",
-    "ember-cli-babel": "7.5.0",
+    "ember-cli-babel": "7.7.3",
     "ember-cli-htmlbars": "3.0.1",
     "ember-debug-logger": "2.1.0",
     "ember-decorators": "5.2.0",

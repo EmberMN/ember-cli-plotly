@@ -4238,14 +4238,7 @@ debug@=3.1.0, debug@~3.1.0:
   dependencies:
     ms "2.0.0"
 
-"debug@>=2.0.0 <5.0.0":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
-  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
-  dependencies:
-    ms "^2.1.1"
-
-debug@^3.1.0:
+"debug@>=2.0.0 <4.0.0", debug@^3.1.0:
   version "3.2.6"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
   integrity sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==
@@ -5053,13 +5046,13 @@ ember-debug-handlers-polyfill@^1.1.1:
   resolved "https://registry.yarnpkg.com/ember-debug-handlers-polyfill/-/ember-debug-handlers-polyfill-1.1.1.tgz#e9ae0a720271a834221179202367421b580002ef"
   integrity sha512-lO7FBAqJjzbL+IjnWhVfQITypPOJmXdZngZR/Vdn513W4g/Q6Sjicao/mDzeDCb48Y70C4Facwk0LjdIpSZkRg==
 
-ember-debug-logger@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/ember-debug-logger/-/ember-debug-logger-2.1.0.tgz#ae4a8a058a94878565afa81e7706148e52271557"
-  integrity sha512-pX7c296FXQdx7Y3LybeHwuhBckcxFi9WDxhgZos8+ID2NkdFRulAPjAbI88PfpqFFvRAYMUE2n583i4for289A==
+ember-debug-logger@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ember-debug-logger/-/ember-debug-logger-2.1.1.tgz#d8f5532a6bf9f3a3be371df4cf8b34df479ff31c"
+  integrity sha512-QG8m+3YDfJQdcv/U3DyZaN94s/7EvgzWTIVupli1wUWwZdU70fuNyDIYYyyRPAddOQOGYanyABkOYJkQOyVnXA==
   dependencies:
     "@types/debug" "*"
-    debug ">=2.0.0 <5.0.0"
+    debug ">=2.0.0 <4.0.0"
     ember-auto-import "^1.2.21"
     ember-cli-babel "^7.6.0"
 

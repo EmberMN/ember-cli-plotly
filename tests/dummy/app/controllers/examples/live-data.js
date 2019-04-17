@@ -3,7 +3,7 @@ import { later } from '@ember/runloop';
 import { A } from '@ember/array';
 import EmberObject, { action } from '@ember/object';
 
-import * as debug from 'debug';
+import debug from 'debug';
 const log = debug('ember-cli-plotly:dummy:live-data');
 
 const interval = 1000;

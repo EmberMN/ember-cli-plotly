@@ -31,10 +31,10 @@
     "test:all": "ember try:each"
   },
   "dependencies": {
+    "debug": "4.1.1",
     "ember-auto-import": "1.2.21",
     "ember-cli-babel": "7.7.3",
     "ember-cli-htmlbars": "3.0.1",
-    "ember-debug-logger": "2.1.1",
     "ember-decorators": "6.0.0",
     "ember-lodash": "4.19.4",
     "plotly.js": "1.47.2"

@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import generateDataSets from 'dummy/utils/datasets'
 
-import * as debug from 'debug';
+import debug from 'debug';
 const log = debug('ember-cli-plotly:dummy:legend-events');
 
 export default class ExamplesLegendEventsController extends Controller.extend({

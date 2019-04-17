@@ -146,7 +146,7 @@ export default class SomeController extends Controller.extend({
 
 ## Debugging
 
-This package uses [`ember-debug-logger`](https://github.com/salsify/ember-debug-logger)
+This package uses [`debug`](https://github.com/visionmedia/debug)
 with the `ember-cli-plotly` namespace, so you should be able to use one of the following
 procedures to make debug messages visible (see [docs](https://github.com/visionmedia/debug)):
 

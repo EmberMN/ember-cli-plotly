@@ -4,7 +4,7 @@ import { action, computed } from '@ember/object';
 
 import getNormalDistPDF from 'dummy/utils/get-normal-dist-pdf';
 
-import * as debug from 'debug';
+import debug from 'debug';
 const log = debug('ember-cli-plotly:dummy:live-color');
 
 //const interval = 0; // (go as fast as the plot can update)

@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import generateDataSets from 'dummy/utils/datasets'
 
 import * as debug from 'debug';

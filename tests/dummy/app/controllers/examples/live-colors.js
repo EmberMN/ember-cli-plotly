@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { later } from '@ember/runloop';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 
 import getNormalDistPDF from 'dummy/utils/get-normal-dist-pdf';
 

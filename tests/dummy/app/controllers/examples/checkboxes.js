@@ -1,7 +1,7 @@
 import { A } from '@ember/array';
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 
 const n = 51;
 const x = new Array(n).fill(0).map((z,i) => 10*(2*i/(n-1) - 1)); // [-10, ..., 10]

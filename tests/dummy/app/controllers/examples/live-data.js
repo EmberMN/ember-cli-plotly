@@ -1,8 +1,7 @@
 import Controller from '@ember/controller';
 import { later } from '@ember/runloop';
 import { A } from '@ember/array';
-import EmberObject from '@ember/object';
-import { action  } from '@ember-decorators/object';
+import EmberObject, { action } from '@ember/object';
 
 import * as debug from 'debug';
 const log = debug('ember-cli-plotly:dummy:live-data');

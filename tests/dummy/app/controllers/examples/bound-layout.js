@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:plot-ly-component');
 

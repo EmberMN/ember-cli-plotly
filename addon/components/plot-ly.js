@@ -1,6 +1,6 @@
 import Component from '@ember/component';
-import EmberObject from '@ember/object';
-import { computed, observes } from '@ember-decorators/object';
+import EmberObject, { computed } from '@ember/object';
+import { observes } from '@ember-decorators/object';
 import { debounce, scheduleOnce } from '@ember/runloop';
 
 import layout from '../templates/components/plot-ly';

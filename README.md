@@ -87,7 +87,7 @@ export default Route.extend({
 ```js
 // my-app/app/controllers/somewhere.js
 import Controller from '@ember/controller';
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 
 export default class SomeController extends Controller.extend({
   init() {

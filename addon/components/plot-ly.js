@@ -2,10 +2,13 @@ import Component from '@ember/component';
 import EmberObject, { computed } from '@ember/object';
 import { observes } from '@ember-decorators/object';
 import { debounce, scheduleOnce } from '@ember/runloop';
+import { registerWaiter } from '@ember/test';
 
 import layout from '../templates/components/plot-ly';
 
-import Plotly from 'plotly.js';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+import ObjectProxy from '@ember/object/proxy';
+
 import debug from 'debug';
 
 const log = debug('ember-cli-plotly:plot-ly-component');
@@ -13,6 +16,8 @@ const warn = debug('ember-cli-plotly:plot-ly-component');
 /* eslint-disable no-console */
 warn.log = console.warn.bind(console);
 /* eslint-enable no-console */
+
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 
 // TODO: Make configurable via ENV
 // https://github.com/plotly/plotly.js/blob/5bc25b490702e5ed61265207833dbd58e8ab27f1/src/plot_api/plot_config.js#L22-L184
@@ -78,6 +83,17 @@ const knownPlotlyEvents = [
 export default class PlotlyComponent extends Component {
   constructor(...args) {
     super(...args);
+
+    this.set('_plotly', ObjectPromiseProxy.create({
+      // somehow import('plotly.js') does not work
+      promise: import('plotly.js/dist/plotly').then(module => module.default)
+    }));
+
+    /* global Ember */
+    if (Ember.testing) {
+      registerWaiter(() => this._plotly.isFulfilled);
+    }
+
     this.set('layout', layout);
     this.set('_resizeEventHandler', () => {
       log('_resizeEventHandler');
@@ -92,7 +108,6 @@ export default class PlotlyComponent extends Component {
   // Consumers should override this if they want to handle plotly_events
   onPlotlyEvent(eventName, ...args) {
     log('onPlotlyEvent fired (does nothing since it was not overridden)', eventName, ...args);
-
   }
 
   // Lifecycle hooks
@@ -109,7 +124,10 @@ export default class PlotlyComponent extends Component {
   willDestroyElement() {
     log('willDestroyElement called -- unbinding event listeners and calling Plotly.purge');
     this._unbindPlotlyEventListeners();
-    Plotly.purge(this.elementId);
+
+    if (this._plotly.isFulfilled) {
+      this._plotly.content.purge(this.elementId);
+    }
   }
 
 
@@ -152,7 +170,7 @@ export default class PlotlyComponent extends Component {
 
   _onResize() {
     log('_onResize');
-    Plotly.Plots.resize(this.elementId);
+    this._plotly.then(Plotly => Plotly.Plots.resize(this.elementId));
   }
 
   _bindPlotlyEventListeners() {
@@ -185,38 +203,42 @@ export default class PlotlyComponent extends Component {
   }
 
   _newPlot() {
-    if (this._isDomElementBad()) {
-      warn(`_newPlot aborting since element (or its ID) is not available or component is (being) destroyed.`);
-      return;
-    }
-    const id = this.elementId;
-    const { chartData, chartLayout, chartConfig } = this.get('_parameters');
-    this._unbindPlotlyEventListeners();
-    log('About to call Plotly.newPlot');
-    Plotly.newPlot(id, chartData, chartLayout, chartConfig).then(() => {
-      log('newPlot finished');
-      this._bindPlotlyEventListeners();
-      // TODO: Hook
-    }).catch((e, ...args) => {
-      warn(`Plotly.newPlot resulted in rejected promise`, e, ...args);
+    this._plotly.then(Plotly => {
+      if (this._isDomElementBad()) {
+        warn(`_newPlot aborting since element (or its ID) is not available or component is (being) destroyed.`);
+        return;
+      }
+      const id = this.elementId;
+      const { chartData, chartLayout, chartConfig } = this.get('_parameters');
+      this._unbindPlotlyEventListeners();
+      log('About to call Plotly.newPlot');
+      Plotly.newPlot(id, chartData, chartLayout, chartConfig).then(() => {
+        log('newPlot finished');
+        this._bindPlotlyEventListeners();
+        // TODO: Hook
+      }).catch((e, ...args) => {
+        warn(`Plotly.newPlot resulted in rejected promise`, e, ...args);
+      });
     });
   }
 
   _react() {
-    if (this._isDomElementBad()) {
-      warn(`_react aborting since element (or its ID) is not available or component is (being) destroyed.`);
-      return;
-    }
-    const id = this.elementId;
-    const { chartData, chartLayout, chartConfig } = this.get('_parameters');
-    // Force update
-    chartLayout.datarevision += 1;
-    log('About to call Plotly.react', chartData, chartLayout, chartConfig);
-    Plotly.react(id, chartData, chartLayout, chartConfig).then(() => {
-      log('react finished');
-      // TODO: Hook
-    }).catch((e, ...args) => {
-      warn(`Plotly.react resulted in rejected promise`, e, ...args);
+    this._plotly.then(Plotly => {
+      if (this._isDomElementBad()) {
+        warn(`_react aborting since element (or its ID) is not available or component is (being) destroyed.`);
+        return;
+      }
+      const id = this.elementId;
+      const { chartData, chartLayout, chartConfig } = this.get('_parameters');
+      // Force update
+      chartLayout.datarevision += 1;
+      log('About to call Plotly.react', chartData, chartLayout, chartConfig);
+      Plotly.react(id, chartData, chartLayout, chartConfig).then(() => {
+        log('react finished');
+        // TODO: Hook
+      }).catch((e, ...args) => {
+        warn(`Plotly.react resulted in rejected promise`, e, ...args);
+      });
     });
   }
 }

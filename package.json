@@ -37,7 +37,7 @@
     "ember-cli-htmlbars": "3.0.1",
     "ember-decorators": "6.0.0",
     "ember-lodash": "4.19.4",
-    "plotly.js": "1.47.3"
+    "plotly.js": "1.47.4"
   },
   "devDependencies": {
     "@ember/optional-features": "0.7.0",

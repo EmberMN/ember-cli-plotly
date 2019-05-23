@@ -4684,10 +4684,10 @@ ember-compatibility-helpers@^1.2.0:
     ember-cli-version-checker "^2.1.1"
     semver "^5.4.1"
 
-ember-component-css@0.6.7:
-  version "0.6.7"
-  resolved "https://registry.yarnpkg.com/ember-component-css/-/ember-component-css-0.6.7.tgz#dbc6debe5c04a2c0fe8a5edc64303c7324b33945"
-  integrity sha512-nZbGVHr3TI5uBb6mGqAvB2QJo8VQcmXTLCy/PnJ/Lyq3sKZCjg5dQE66X+TcHPG3IWEMOmCe/1vaK4HPtE8gfA==
+ember-component-css@0.6.8:
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/ember-component-css/-/ember-component-css-0.6.8.tgz#e9ebca0a867acfc81637db0ce3cd3b847ff9a263"
+  integrity sha512-d0HWwrZNpVATDTsK3GMCrw8U9JhJBNtlV9UnrGy/VfhmOVSjt7JFks44IYZmRMuRXC2o5sNdF81OiPr1xiXUUQ==
   dependencies:
     broccoli-concat "^3.7.3"
     broccoli-funnel "^2.0.1"
@@ -4697,14 +4697,14 @@ ember-component-css@0.6.7:
     broccoli-replace "^0.12.0"
     broccoli-style-manifest "^1.5.2"
     ember-cli-babel "^7.1.4"
-    ember-cli-version-checker "^2.1.2"
+    ember-cli-version-checker "^3.0.1"
     ember-getowner-polyfill "^2.2.0"
     fs-tree-diff "^1.0.2"
     md5 "^2.2.1"
     postcss "^7.0.6"
     postcss-less "^3.1.0"
     postcss-scss "^2.0.0"
-    postcss-selector-namespace "^1.5.0"
+    postcss-selector-namespace "^2.0.0"
     rsvp "^4.8.4"
     walk-sync "^1.0.1"
 
@@ -9628,21 +9628,12 @@ postcss-scss@^2.0.0:
   dependencies:
     postcss "^7.0.0"
 
-postcss-selector-namespace@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/postcss-selector-namespace/-/postcss-selector-namespace-1.5.0.tgz#62335de8f1992eae989d1be33ba2298156ab458b"
-  integrity sha512-tQmqzuqOyH4sCwr+yRmnIKPzNQy1tIVvEZMR9qd82npDJ2X5KwMoeFFjCdupJ00eqMrCYj58wWvSwwZDA3kTmA==
+postcss-selector-namespace@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/postcss-selector-namespace/-/postcss-selector-namespace-2.0.0.tgz#d784cc24f5f483a301c9148fc7e50f5d7b64845e"
+  integrity sha512-1Eka6f/6IL08c8gWfslUdwqmURvHYbdI57zOMHeslIuiLaK1nxvQefqAGcr9Em9T0k+4IcwhBTAtJm+6nCz2wQ==
   dependencies:
-    postcss "^6.0.14"
-
-postcss@^6.0.14:
-  version "6.0.23"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-6.0.23.tgz#61c82cc328ac60e677645f979054eb98bc0e3324"
-  integrity sha512-soOk1h6J3VMTZtVeVpv15/Hpdl2cBLX3CAw4TAbkpTJiNPk9YP/zWcD1ND+xEtvyuuvKzbxliTOIyvkSeSJ6ag==
-  dependencies:
-    chalk "^2.4.1"
-    source-map "^0.6.1"
-    supports-color "^5.4.0"
+    postcss "^7.0.0"
 
 postcss@^7.0.0, postcss@^7.0.14, postcss@^7.0.6:
   version "7.0.16"
@@ -11367,7 +11358,7 @@ supports-color@^2.0.0:
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
   integrity sha1-U10EXOa2Nj+kARcIRimZXp3zJMc=
 
-supports-color@^5.3.0, supports-color@^5.4.0:
+supports-color@^5.3.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-5.5.0.tgz#e2e69a44ac8772f78a1ec0b35b689df6530efc8f"
   integrity sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==

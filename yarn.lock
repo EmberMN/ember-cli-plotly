@@ -4684,10 +4684,10 @@ ember-compatibility-helpers@^1.2.0:
     ember-cli-version-checker "^2.1.1"
     semver "^5.4.1"
 
-ember-component-css@0.6.8:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/ember-component-css/-/ember-component-css-0.6.8.tgz#e9ebca0a867acfc81637db0ce3cd3b847ff9a263"
-  integrity sha512-d0HWwrZNpVATDTsK3GMCrw8U9JhJBNtlV9UnrGy/VfhmOVSjt7JFks44IYZmRMuRXC2o5sNdF81OiPr1xiXUUQ==
+ember-component-css@0.6.9:
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/ember-component-css/-/ember-component-css-0.6.9.tgz#592983f5678e4abc2c0dc01a377f812506ddac5a"
+  integrity sha512-bQoEdks22RTBehDjmqvZSuOQQvT59uEN2Zse9hsruO7lgoVtd/dk1YuJd2B0mXZyR+6TEN7/R8yeLtTubsubMQ==
   dependencies:
     broccoli-concat "^3.7.3"
     broccoli-funnel "^2.0.1"
@@ -4699,7 +4699,7 @@ ember-component-css@0.6.8:
     ember-cli-babel "^7.1.4"
     ember-cli-version-checker "^3.0.1"
     ember-getowner-polyfill "^2.2.0"
-    fs-tree-diff "^1.0.2"
+    fs-tree-diff "^0.5.9"
     md5 "^2.2.1"
     postcss "^7.0.6"
     postcss-less "^3.1.0"
@@ -5845,7 +5845,7 @@ fs-minipass@^1.2.5:
   dependencies:
     minipass "^2.2.1"
 
-fs-tree-diff@^0.5.2, fs-tree-diff@^0.5.3, fs-tree-diff@^0.5.4, fs-tree-diff@^0.5.6, fs-tree-diff@^0.5.7:
+fs-tree-diff@^0.5.2, fs-tree-diff@^0.5.3, fs-tree-diff@^0.5.4, fs-tree-diff@^0.5.6, fs-tree-diff@^0.5.7, fs-tree-diff@^0.5.9:
   version "0.5.9"
   resolved "https://registry.yarnpkg.com/fs-tree-diff/-/fs-tree-diff-0.5.9.tgz#a4ec6182c2f5bd80b9b83c8e23e4522e6f5fd946"
   integrity sha512-872G8ax0kHh01m9n/2KDzgYwouKza0Ad9iFltBpNykvROvf2AGtoOzPJgGx125aolGPER3JuC7uZFrQ7bG1AZw==
@@ -5855,7 +5855,7 @@ fs-tree-diff@^0.5.2, fs-tree-diff@^0.5.3, fs-tree-diff@^0.5.4, fs-tree-diff@^0.5
     path-posix "^1.0.0"
     symlink-or-copy "^1.1.8"
 
-fs-tree-diff@^1.0.0, fs-tree-diff@^1.0.2:
+fs-tree-diff@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/fs-tree-diff/-/fs-tree-diff-1.0.2.tgz#0e2931733a85b55feb3472c0b89a20b0c03ac0de"
   integrity sha512-Zro2ACaPVDgVOx9+s5s5AfPlAD0kMJdbwGvTGF6KC1SjxjiGWxJvV4mUTDkFVSy3OUw2C/f1qpdjF81hGqSBAw==

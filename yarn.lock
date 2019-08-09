@@ -4741,10 +4741,10 @@ ember-debug-handlers-polyfill@^1.1.1:
   resolved "https://registry.yarnpkg.com/ember-debug-handlers-polyfill/-/ember-debug-handlers-polyfill-1.1.1.tgz#e9ae0a720271a834221179202367421b580002ef"
   integrity sha512-lO7FBAqJjzbL+IjnWhVfQITypPOJmXdZngZR/Vdn513W4g/Q6Sjicao/mDzeDCb48Y70C4Facwk0LjdIpSZkRg==
 
-ember-decorators-polyfill@1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/ember-decorators-polyfill/-/ember-decorators-polyfill-1.0.5.tgz#f42f6aea872a4f146536e9cad753b80bdae54db4"
-  integrity sha512-5fR+PIp52EwuhWHN3sosEX/GKuDx2UBaRh/pNZm7mUNHAvbIiUug/wl4EGTNK6316Wc+DTiFk2lnM2mn0Q1Msw==
+ember-decorators-polyfill@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/ember-decorators-polyfill/-/ember-decorators-polyfill-1.0.6.tgz#93094a1eebfd8d54e85abd941f78bc330dc3f973"
+  integrity sha512-Mvrja3FBBLaZ3crmAAnrSZLz41bESWI8Tm54YUwSbp16Osqa/lPHRE8Clxn+qtjBDRpAHq0EcROILGTaBscE2g==
   dependencies:
     ember-cli-babel "^7.1.2"
     ember-cli-version-checker "^3.1.3"

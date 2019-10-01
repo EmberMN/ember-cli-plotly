@@ -95,13 +95,6 @@ export default class PlotlyComponent extends Component {
     }
 
     this.set('layout', layout);
-    this.set('_resizeEventHandler', () => {
-      log('_resizeEventHandler');
-      debounce(this, () => {
-        log('debounced _resizeEventHandler');
-        scheduleOnce('afterRender', this, '_onResize');
-      }, 200);  // TODO: Make throttling/debouncing/whatever more flexible/configurable
-    });
     this._logUnrecognizedPlotlyEvents();
   }
 
@@ -168,10 +161,23 @@ export default class PlotlyComponent extends Component {
     return parameters;
   }
 
+  // TODO: Make throttling/debouncing/whatever more flexible/configurable
+  _resizeEventHandler() {
+    log('_resizeEventHandler');
+    debounce(this, this._debouncedResizeEventHandler, 200);
+  }
+
+  _debouncedResizeEventHandler() {
+    log('_debouncedResizeEventHandler firing (scheduling _onResize to run after next render)');
+    scheduleOnce('afterRender', this, this._onResize);
+  }
+
   _onResize() {
-    log('_onResize');
+    log('_onResize firing');
     this._plotly.then(Plotly => Plotly.Plots.resize(this.elementId));
   }
+
+
 
   _bindPlotlyEventListeners() {
     if (this.get('_parameters.isResponsive')) {

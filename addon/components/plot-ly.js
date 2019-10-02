@@ -164,7 +164,12 @@ export default class PlotlyComponent extends Component {
   // TODO: Make throttling/debouncing/whatever more flexible/configurable
   _resizeEventHandler() {
     log('_resizeEventHandler');
-    debounce(this, this._debouncedResizeEventHandler, 200);
+    try {
+      debounce(this, this._debouncedResizeEventHandler, 200);
+    }
+    catch (e) {
+      warn(`_resizeEventHandler caught exception when calling debounce (not sure why this happens)`, e);
+    }
   }
 
   _debouncedResizeEventHandler() {

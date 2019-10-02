@@ -1,5 +1,6 @@
 # ember-cli-plotly
 
+[![Latest NPM release](https://img.shields.io/npm/v/ember-cli-plotly)](https://www.npmjs.com/package/ember-cli-plotly)
 [![Build Status](https://travis-ci.org/EmberMN/ember-cli-plotly.svg?branch=master)](https://travis-ci.org/EmberMN/ember-cli-plotly)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 [![Ember Observer Score](https://emberobserver.com/badges/ember-cli-plotly.svg)](https://emberobserver.com/addons/ember-cli-plotly)

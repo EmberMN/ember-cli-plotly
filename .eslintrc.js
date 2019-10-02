@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  parser: "babel-eslint",
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module'
@@ -16,6 +16,7 @@ module.exports = {
     browser: true
   },
   rules: {
+    'ember/no-jquery': 'warn',
   },
   overrides: [
     // node files
@@ -37,8 +38,7 @@ module.exports = {
         'tests/dummy/app/**'
       ],
       parserOptions: {
-        sourceType: 'script',
-        ecmaVersion: 2015
+        sourceType: 'script'
       },
       env: {
         browser: false,

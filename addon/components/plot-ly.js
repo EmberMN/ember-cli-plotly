@@ -182,11 +182,12 @@ export default class PlotlyComponent extends Component {
     this._plotly.then(Plotly => Plotly.Plots.resize(this.elementId));
   }
 
-
+  _boundResizeEventHandler() {} // overwritten in _bindPlotlyEventListeners
 
   _bindPlotlyEventListeners() {
     if (this.get('_parameters.isResponsive')) {
-      window.addEventListener('resize', this._resizeEventHandler);
+      this.set('_boundResizeEventHandler', this._resizeEventHandler.bind(this));
+      window.addEventListener('resize', this._boundResizeEventHandler);
     }
 
     const plotlyEvents = this.getWithDefault('plotlyEvents', []);
@@ -198,7 +199,7 @@ export default class PlotlyComponent extends Component {
   }
 
   _unbindPlotlyEventListeners() {
-    window.removeEventListener('resize', this._resizeEventHandler);
+    window.removeEventListener('resize', this._boundResizeEventHandler);
     const events = this.getWithDefault('plotlyEvents', []);
     log('_unbindPlotlyEventListeners', events, this.element);
     events.forEach((eventName) => {

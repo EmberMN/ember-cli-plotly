@@ -55,7 +55,7 @@
     "ember-component-css": "0.7.4",
     "ember-decorators-polyfill": "1.0.6",
     "ember-disable-prototype-extensions": "1.1.3",
-    "ember-export-application-global": "2.0.0",
+    "ember-export-application-global": "2.0.1",
     "ember-load-initializers": "2.1.0",
     "ember-maybe-import-regenerator": "0.1.6",
     "ember-md5": "1.2.0",

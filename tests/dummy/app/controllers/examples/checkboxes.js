@@ -45,7 +45,7 @@ export default class CheckBoxesController extends Controller {
 
   @computed('dataSets.@each.isPassedToPlotly')
   get chartData() {
-    const dataSets = this.get('dataSets');
+    const dataSets = this.dataSets;
     return dataSets.filterBy('isPassedToPlotly', true);
   }
 }

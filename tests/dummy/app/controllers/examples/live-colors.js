@@ -65,12 +65,12 @@ export default class ExamplesLiveColorsController extends Controller {
 
   update() {
     log('update firing');
-    if (!this.get('_updating')) {
+    if (!this._updating) {
       return;
     }
 
-    const currentTrace = this.get('currentTrace');
-    const currentIndex = this.get('currentIndex');
+    const currentTrace = this.currentTrace;
+    const currentIndex = this.currentIndex;
     log(`Update called: currentTrace=${currentTrace}, currentIndex=${currentIndex}`, this.get(`chartData`));
 
     // Prepare to do next point
@@ -90,7 +90,7 @@ export default class ExamplesLiveColorsController extends Controller {
     }
 
     this._triggerUpdate();
-    if (this.get('_updating')) {
+    if (this._updating) {
       later(this, 'update', interval);
     }
   }
@@ -105,13 +105,13 @@ export default class ExamplesLiveColorsController extends Controller {
   get chartData() {
     const currentTrace = (() => {
       // FIXME: Shouldn't need to sanity check this
-      let ct = this.get('currentTrace');
+      let ct = this.currentTrace;
       if (ct >= sourceData.length) {
         ct = sourceData.length - 1;
       }
       return ct;
     })();
-    const currentIndex = this.get('currentIndex');
+    const currentIndex = this.currentIndex;
     log(`Computing chartData (currentTrace=${currentTrace}, currentIndex=${currentIndex})`);
     // We're going to copy sourceData (don't modify it!) into our own var here where we can set colors, slice to animate, etc.
     // For improved performance we could maintain this state instead of rebuilding it every time
@@ -156,8 +156,8 @@ export default class ExamplesLiveColorsController extends Controller {
 
   @action
   start() {
-    log(`Start clicked`, this.get('_updating'));
-    if (this.get('_updating') === false) {
+    log(`Start clicked`, this._updating);
+    if (this._updating === false) {
       this.set('_updating', true);
       later(this, 'update', interval);
     }

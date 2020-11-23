@@ -24,16 +24,16 @@ export default class ExamplesLiveDataController extends Controller.extend({
 }) {
   update() {
     log('update firing');
-    if (!this.get('_updating')) {
+    if (!this._updating) {
       return;
     }
 
-    const currentTrace = this.get('currentTrace');
-    const currentIndex = this.get('currentIndex');
+    const currentTrace = this.currentTrace;
+    const currentIndex = this.currentIndex;
     log(`Update called: currentTrace=${currentTrace}, currentIndex=${currentIndex}`, this.get(`chartData`));
 
     if (!this.get(`chartData.${currentTrace}`)) {
-      this.get('chartData').pushObject(EmberObject.create({
+      this.chartData.pushObject(EmberObject.create({
         x: A(),
         y: A()
       }));
@@ -64,13 +64,13 @@ export default class ExamplesLiveDataController extends Controller.extend({
       currentTrace: 0,
       currentIndex: 0
     });
-    this.get('chartData').clear();
+    this.chartData.clear();
   }
 
   @action
   start() {
-    log(`Start clicked`, this.get('_updating'));
-    if (this.get('_updating') === false) {
+    log(`Start clicked`, this._updating);
+    if (this._updating === false) {
       this.set('_updating', true);
       later(this, 'update', interval);
     }

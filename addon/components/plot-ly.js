@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import EmberObject, { computed } from '@ember/object';
 import { observes } from '@ember-decorators/object';
 import { debounce, scheduleOnce } from '@ember/runloop';
-import { registerWaiter } from '@ember/test';
+import { buildWaiter } from '@ember/test-waiters';
 
 import layout from '../templates/components/plot-ly';
 
@@ -84,14 +84,22 @@ export default class PlotlyComponent extends Component {
   constructor(...args) {
     super(...args);
 
+    /* global Ember */
+    let waiter;
+    let token;
+    if (Ember.testing) {
+      waiter = buildWaiter('plotly-loaded-waiter');
+      token = waiter.beginAsync();
+    }
+
+    const promise = import('plotly.js/dist/plotly').then(module => module.default);
+    // import('plotly.js') does not work?
     this.set('_plotly', ObjectPromiseProxy.create({
-      // somehow import('plotly.js') does not work
-      promise: import('plotly.js/dist/plotly').then(module => module.default)
+      promise,
     }));
 
-    /* global Ember */
     if (Ember.testing) {
-      registerWaiter(() => this._plotly.isFulfilled);
+      promise.finally(() => { waiter.endAsync(token); })
     }
 
     this.set('layout', layout);

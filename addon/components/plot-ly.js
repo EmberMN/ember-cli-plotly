@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import EmberObject, { computed } from '@ember/object';
 import { observes } from '@ember-decorators/object';
 import { debounce, scheduleOnce } from '@ember/runloop';
-import { registerWaiter } from '@ember/test';
+import { buildWaiter } from '@ember/test-waiters';
 
 import layout from '../templates/components/plot-ly';
 
@@ -84,14 +84,22 @@ export default class PlotlyComponent extends Component {
   constructor(...args) {
     super(...args);
 
+    /* global Ember */
+    let waiter;
+    let token;
+    if (Ember.testing) {
+      waiter = buildWaiter('plotly-loaded-waiter');
+      token = waiter.beginAsync();
+    }
+
+    const promise = import('plotly.js/dist/plotly').then(module => module.default);
+    // import('plotly.js') does not work?
     this.set('_plotly', ObjectPromiseProxy.create({
-      // somehow import('plotly.js') does not work
-      promise: import('plotly.js/dist/plotly').then(module => module.default)
+      promise,
     }));
 
-    /* global Ember */
     if (Ember.testing) {
-      registerWaiter(() => this._plotly.isFulfilled);
+      promise.finally(() => { waiter.endAsync(token); })
     }
 
     this.set('layout', layout);
@@ -125,9 +133,10 @@ export default class PlotlyComponent extends Component {
 
 
   // Private
+  // eslint-disable-next-line ember/no-observers
   @observes('plotlyEvents.[]')
   _logUnrecognizedPlotlyEvents() {
-    const plotlyEvents = this.get('plotlyEvents');
+    const plotlyEvents = this.plotlyEvents;
     if (plotlyEvents && typeof plotlyEvents.forEach === 'function') {
       plotlyEvents.forEach(eventName => {
         if (!knownPlotlyEvents.find(name => name === eventName)) {
@@ -140,6 +149,7 @@ export default class PlotlyComponent extends Component {
     }
   }
 
+  // eslint-disable-next-line ember/no-observers
   @observes('chartData.triggerUpdate')
   _triggerUpdate() {
     log(`_triggerUpdate observer firing`);
@@ -148,14 +158,14 @@ export default class PlotlyComponent extends Component {
 
 
   // Merge user-provided parameters with defaults
-  @computed('chartData', 'chartLayout', 'chartConfig', 'isResponsive', 'plotlyEvents')
+  @computed('chartConfig', 'chartData', 'chartLayout', 'elementId', 'isResponsive', 'plotlyEvents')
   get _parameters() {
     const parameters = Object.assign({}, {
-      chartData: this.get('chartData'),
-      chartLayout: this.get('chartLayout') || document.getElementById(this.elementId).layout || EmberObject.create({ datarevision: 0 }),
-      chartConfig: Object.assign(defaultConfig, this.get('chartConfig')),
-      isResponsive: !!this.get('isResponsive'),
-      plotlyEvents: this.get('plotlyEvents') || []
+      chartData: this.chartData,
+      chartLayout: this.chartLayout || document.getElementById(this.elementId).layout || EmberObject.create({ datarevision: 0 }),
+      chartConfig: Object.assign(defaultConfig, this.chartConfig),
+      isResponsive: !!this.isResponsive,
+      plotlyEvents: this.plotlyEvents || []
     });
     log(`computing parameters =`, parameters);
     return parameters;
@@ -185,12 +195,12 @@ export default class PlotlyComponent extends Component {
   _boundResizeEventHandler() {} // overwritten in _bindPlotlyEventListeners
 
   _bindPlotlyEventListeners() {
-    if (this.get('_parameters.isResponsive')) {
+    if (this._parameters.isResponsive) {
       this.set('_boundResizeEventHandler', this._resizeEventHandler.bind(this));
       window.addEventListener('resize', this._boundResizeEventHandler);
     }
 
-    const plotlyEvents = this.getWithDefault('plotlyEvents', []);
+    const plotlyEvents = (this.plotlyEvents === undefined ? [] : this.plotlyEvents);
     log('_bindPlotlyEventListeners', plotlyEvents, this.element);
     plotlyEvents.forEach((eventName) => {
       // Note: Using plotly.js' 'on' method (copied from EventEmitter)
@@ -200,7 +210,7 @@ export default class PlotlyComponent extends Component {
 
   _unbindPlotlyEventListeners() {
     window.removeEventListener('resize', this._boundResizeEventHandler);
-    const events = this.getWithDefault('plotlyEvents', []);
+    const events = (this.plotlyEvents === undefined ? [] : this.plotlyEvents);
     log('_unbindPlotlyEventListeners', events, this.element);
     events.forEach((eventName) => {
       // Note: Using plotly.js' 'removeListener' method (copied from EventEmitter)
@@ -211,7 +221,7 @@ export default class PlotlyComponent extends Component {
   }
 
   _isDomElementBad() {
-    return !this.element || !this.elementId || this.get('isDestroying') || this.get('isDestroyed');
+    return !this.element || !this.elementId || this.isDestroying || this.isDestroyed;
   }
 
   _newPlot() {
@@ -221,7 +231,7 @@ export default class PlotlyComponent extends Component {
         return;
       }
       const id = this.elementId;
-      const { chartData, chartLayout, chartConfig } = this.get('_parameters');
+      const { chartData, chartLayout, chartConfig } = this._parameters;
       this._unbindPlotlyEventListeners();
       log('About to call Plotly.newPlot');
       Plotly.newPlot(id, chartData, chartLayout, chartConfig).then(() => {
@@ -241,7 +251,7 @@ export default class PlotlyComponent extends Component {
         return;
       }
       const id = this.elementId;
-      const { chartData, chartLayout, chartConfig } = this.get('_parameters');
+      const { chartData, chartLayout, chartConfig } = this._parameters;
       // Force update
       chartLayout.datarevision += 1;
       log('About to call Plotly.react', chartData, chartLayout, chartConfig);

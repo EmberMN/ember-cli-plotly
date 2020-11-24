@@ -26,12 +26,12 @@ export default class LassoExampleController extends Controller.extend({
   }
 }) {
 
-  @computed('selectedPoints', 'selectedPoints.@each.curveNumber')
+  @computed('chartData', 'selectedPoints.@each.curveNumber')
   get selectedTraces() {
-    const selectedPoints = this.get('selectedPoints');
+    const selectedPoints = this.selectedPoints;
     log(`selectedTraces got selectedPoints =`, selectedPoints);
     if (selectedPoints) {
-      const chartData = this.get('chartData');
+      const chartData = this.chartData;
       const result = selectedPoints.map(point => point.curveNumber)
         .reduce((a, sp) => { if (!a.includes(sp)) { a.push(sp); } return a; }, [])
         .map(i => {

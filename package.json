@@ -42,7 +42,9 @@
     "plotly.js": "1.57.1"
   },
   "devDependencies": {
+    "@babel/core": "^7",
     "@ember/optional-features": "2.0.0",
+    "@ember/test-waiters": "^2.3.0",
     "@glimmer/component": "^1.0.2",
     "@glimmer/tracking": "^1.0.2",
     "babel-eslint": "10.1.0",

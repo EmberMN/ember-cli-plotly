@@ -133,6 +133,7 @@ export default class PlotlyComponent extends Component {
 
 
   // Private
+  // eslint-disable-next-line ember/no-observers
   @observes('plotlyEvents.[]')
   _logUnrecognizedPlotlyEvents() {
     const plotlyEvents = this.plotlyEvents;
@@ -148,6 +149,7 @@ export default class PlotlyComponent extends Component {
     }
   }
 
+  // eslint-disable-next-line ember/no-observers
   @observes('chartData.triggerUpdate')
   _triggerUpdate() {
     log(`_triggerUpdate observer firing`);
@@ -193,7 +195,7 @@ export default class PlotlyComponent extends Component {
   _boundResizeEventHandler() {} // overwritten in _bindPlotlyEventListeners
 
   _bindPlotlyEventListeners() {
-    if (this.get('_parameters.isResponsive')) {
+    if (this._parameters.isResponsive) {
       this.set('_boundResizeEventHandler', this._resizeEventHandler.bind(this));
       window.addEventListener('resize', this._boundResizeEventHandler);
     }

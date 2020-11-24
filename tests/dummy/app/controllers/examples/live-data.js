@@ -44,7 +44,7 @@ export default class ExamplesLiveDataController extends Controller.extend({
     this.set(`chartData.${currentTrace}.y.${currentIndex}`, 100*Math.random());
 
     // Force update
-    this.set('chartData.triggerUpdate', !this.get('chartData.triggerUpdate'));
+    this.set('chartData.triggerUpdate', !this.chartData.triggerUpdate);
 
     if (currentIndex >= 5) {
       this.set('currentTrace', currentTrace + 1);

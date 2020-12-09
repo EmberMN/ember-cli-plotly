@@ -39,7 +39,7 @@
     "ember-cli-htmlbars": "5.3.1",
     "ember-decorators": "6.1.1",
     "ember-lodash": "4.19.5",
-    "plotly.js": "1.57.1"
+    "plotly.js": "1.58.2"
   },
   "devDependencies": {
     "@babel/core": "^7",

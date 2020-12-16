@@ -3,6 +3,7 @@ import EmberObject, { computed } from '@ember/object';
 import { observes } from '@ember-decorators/object';
 import { debounce, scheduleOnce } from '@ember/runloop';
 import { buildWaiter } from '@ember/test-waiters';
+const waiter = buildWaiter('ember-cli-plotly:component-loaded');
 
 import layout from '../templates/components/plot-ly';
 
@@ -85,10 +86,8 @@ export default class PlotlyComponent extends Component {
     super(...args);
 
     /* global Ember */
-    let waiter;
     let token;
     if (Ember.testing) {
-      waiter = buildWaiter('plotly-loaded-waiter');
       token = waiter.beginAsync();
     }
 

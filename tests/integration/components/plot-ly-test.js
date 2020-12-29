@@ -77,20 +77,11 @@ module('Integration | Component | plot-ly', function (hooks) {
          size: 32
        }
       }],
-      // FIXME: plotly.js seems to break under `transform: scale(...)`
-      // so we're "cheating" by moving the dot toward the "top left" of the plot area
-      // so we can compensate our click location for it
       chartLayout: {
-        xaxis: {
-          range: [-1, 15]
-        },
-        yaxis: {
-          range: [-8, 1]
-        }
       },
       plotlyEvents: ['plotly_click', 'plotly_restyle'],
-      onPlotlyEvent(eventName) {
-        log(`onPlotlyEvent('${eventName}') fired`);
+      onPlotlyEvent(eventName, ...otherArgs) {
+        log(`onPlotlyEvent('${eventName}') fired`, ...otherArgs);
         assert.equal('plotly_click', eventName, 'Should receive plotly_click event');
         done();
       }

@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-plotly",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "A basic charting component using Plotly.js",
   "keywords": [
     "ember-addon",
@@ -38,7 +38,7 @@
   "dependencies": {
     "@ember/test-waiters": "^2.3.2",
     "debug": "4.3.1",
-    "ember-auto-import": "^1.11.3",
+    "ember-auto-import": "^2.2.0",
     "ember-cli-babel": "7.26.6",
     "ember-cli-htmlbars": "5.7.1",
     "ember-decorators": "6.1.1",
@@ -88,7 +88,8 @@
     "qunit": "^2.16.0",
     "qunit-dom": "1.6.0",
     "safe-json-stringify": "1.2.0",
-    "testdouble": "3.16.1"
+    "testdouble": "3.16.1",
+    "webpack": "5"
   },
   "engines": {
     "node": "12.* || 14.* || >= 16"

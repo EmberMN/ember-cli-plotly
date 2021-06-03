@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased / 0.7.0] - 2021-06-xx
 
+### Breaking changes
+- Applications that use that addon must use ember-auto-import v2.x
+  See the corresponding [upgrade guide](https://github.com/ef4/ember-auto-import/blob/master/docs/upgrade-guide-2.0.md#ember-auto-import-20) for details.
+
 ### Added
 - Started keeping a changelog
 

@@ -15,20 +15,15 @@ This addon strives to make it easy & efficient to use
 ember install ember-cli-plotly
 ```
 
-## TODO: Write documentation / create github pages
-
 ## Usage
-
-:exclamation: This API should be considered unstable for all v0.x versions of this addon.
 
 ## Examples
 
 ### Static
-This example uses [`ember-array-helper`](https://github.com/kellyselden/ember-array-helper).
 
 ```handlebars
-{{plot-ly
-  chartData=(array
+<Plotly
+  @chartData={{array
     (hash
       name='y = 2x' 
       x=(array 1 2 3) 
@@ -41,8 +36,8 @@ This example uses [`ember-array-helper`](https://github.com/kellyselden/ember-ar
       y=(array -1 -3)
       type='scatter'
     ) 
-  )
-}}
+  }}
+/>
 ```
 
 ### Dynamic
@@ -134,14 +129,13 @@ export default class SomeController extends Controller.extend({
 
 ```handlebars
 {{! my-app/app/templates/somewhere.hbs }}
-{{plot-ly
-  chartData=chartData
-  chartLayout=chartLayout
-  chartConfig=chartConfig
-  onPlotlyEvent=onPlotlyEvent
-  isResponsive=true
-}}
-
+<Plotly
+  @chartData=chartData
+  @chartLayout=chartLayout
+  @chartConfig=chartConfig
+  @onPlotlyEvent=onPlotlyEvent
+  @isResponsive=true
+/>
 ```
 
 ## Debugging

@@ -5,7 +5,7 @@ import { debounce, scheduleOnce } from '@ember/runloop';
 import { buildWaiter } from '@ember/test-waiters';
 const waiter = buildWaiter('ember-cli-plotly:component-loaded');
 
-import layout from '../templates/components/plot-ly';
+import layout from '../templates/components/plotly';
 
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import ObjectProxy from '@ember/object/proxy';

@@ -13,16 +13,19 @@
 # not change them. Doing so could break upgrade flow.
 #
 #$ browsers:
-#$   - chrome
+#$   - Chrome
 #$ emberTryScenarios:
 #$   - scenario: ember-lts-3.16
 #$   - scenario: ember-lts-3.20
+#$   - scenario: ember-lts-3.24
 #$   - scenario: ember-release
 #$   - scenario: ember-beta
 #$   - scenario: ember-canary
 #$   - scenario: ember-default-with-jquery
 #$   - scenario: ember-classic
-#$ nodeVersion: 10.x
+#$   - scenario: embroider-safe
+#$   - scenario: embroider-optimized
+#$ nodeVersion: '12'
 #$ packageManager: yarn
 #
 
@@ -35,7 +38,7 @@ on:
   pull_request:
 
 env:
-  NODE_VERSION: '10.x'
+  NODE_VERSION: '12'
 
 jobs:
   lint:
@@ -84,7 +87,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        browser: [chrome]
+        browser: [Chrome]
 
     steps:
     - uses: actions/checkout@v2
@@ -129,7 +132,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        browser: [chrome]
+        browser: [Chrome]
 
     steps:
     - uses: actions/checkout@v2
@@ -174,11 +177,14 @@ jobs:
         ember-try-scenario: [
           ember-lts-3.16,
           ember-lts-3.20,
+          ember-lts-3.24,
           ember-release,
           ember-beta,
           ember-canary,
           ember-default-with-jquery,
-          ember-classic
+          ember-classic,
+          embroider-safe,
+          embroider-optimized
         ]
 
     steps:

@@ -1,13 +1,12 @@
-{{plot-ly
-  chartData=chartData
-  chartLayout=chartLayout
-  chartConfig=chartConfig
-  plotlyEvents=plotlyEvents
-  onPlotlyEvent=(action "onPlotlyEvent")
-}}
+<Plotly
+  @chartData={{this.chartData}}
+  @chartLayout={{this.chartLayout}}
+  @chartConfig={{this.chartConfig}}
+  {{on "plotly_click" (action "onPlotlyEvent" "click")}}
+/>
 
 <button onclick={{action "start"}} type="button">Start</button>
 <button onclick={{action "stop"}} type="button">Stop</button>
 <button onclick={{action "clear"}} type="button">Clear</button>
 
-currentTrace: {{currentTrace}}, currentIndex: {{currentIndex}}
+currentTrace: {{this.currentTrace}}, currentIndex: {{this.currentIndex}}

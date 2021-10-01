@@ -17,10 +17,10 @@
 </style>
 
 <div class="responsive-container">
-  {{plot-ly
-    chartData=chartData
-    chartLayout=chartLayout
-    chartConfig=chartConfig
-    isResponsive=true
-  }}
+  <Plotly
+    @chartData={{this.chartData}}
+    @chartLayout={{this.chartLayout}}
+    @chartConfig={{this.chartConfig}}
+    @isResponsive=true
+  />
 </div>

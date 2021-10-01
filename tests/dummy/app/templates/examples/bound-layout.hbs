@@ -46,10 +46,10 @@
     </tr>
   </tbody>
 </table>
-{{plot-ly
-  chartData=chartData
-  chartLayout=chartLayout
-}}
+<Plotly
+  @chartData={{this.chartData}}
+  @chartLayout={{this.chartLayout}}
+/>
 
 Computed:<br>
 X: [{{chartLayout.xaxis.range}}]<br>

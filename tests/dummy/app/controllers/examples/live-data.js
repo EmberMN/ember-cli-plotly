@@ -1,57 +1,49 @@
+import { tracked } from '@glimmer/tracking';
 import Controller from '@ember/controller';
 import { later } from '@ember/runloop';
-import { A } from '@ember/array';
-import EmberObject, { action } from '@ember/object';
+import { action } from '@ember/object';
 
 import debug from 'debug';
 const log = debug('ember-cli-plotly:dummy:live-data');
 
 const interval = 1000;
 
-export default class ExamplesLiveDataController extends Controller.extend({
-  init() {
-    this._super(...arguments);
-    this.setProperties({
-      _updating: false,
-      chartData: A(),
-      //chartLayout: {},
-      //chartConfig: {},
-      plotlyEvents: ['plotly_restyle'],
-      currentTrace: 0,
-      currentIndex: 0
-    });
-  }
-}) {
+export default class ExamplesLiveDataController extends Controller {
+  @tracked chartConfig = {};
+  @tracked chartData = [];
+  @tracked chartLayout = {};
+  @tracked currentIndex = 0;
+  @tracked currentTrace = 0;
+
+  _updating = false;
+
   update() {
     log('update firing');
     if (!this._updating) {
       return;
     }
 
-    const currentTrace = this.currentTrace;
-    const currentIndex = this.currentIndex;
-    log(`Update called: currentTrace=${currentTrace}, currentIndex=${currentIndex}`, this.get(`chartData`));
+    log(`Update called: currentTrace=${this.currentTrace}, currentIndex=${this.currentIndex}`, this.chartData);
 
-    if (!this.get(`chartData.${currentTrace}`)) {
-      this.chartData.pushObject(EmberObject.create({
-        x: A(),
-        y: A()
-      }));
+    if (!this.chartData[this.currentTrace]) {
+      this.chartData.push({
+        x: [],
+        y: []
+      });
     }
 
     // Generate some data
-    this.set(`chartData.${currentTrace}.x.${currentIndex}`, currentIndex);
-    this.set(`chartData.${currentTrace}.y.${currentIndex}`, 100*Math.random());
+    this.chartData[this.currentTrace].x[this.currentIndex] = this.currentIndex;
+    this.chartData[this.currentTrace].y[this.currentIndex] = 100*Math.random();
 
-    // Force update
-    this.set('chartData.triggerUpdate', !this.chartData.triggerUpdate);
+    this.notifyPropertyChange('chartData');
 
-    if (currentIndex >= 5) {
-      this.set('currentTrace', currentTrace + 1);
-      this.set('currentIndex', 0);
+    if (this.currentIndex >= 5) {
+      this.currentTrace++;
+      this.currentIndex = 0;
     }
     else {
-      this.set('currentIndex', 1 + currentIndex);
+      this.currentIndex++;
     }
     later(this, 'update', interval);
   }
@@ -60,18 +52,16 @@ export default class ExamplesLiveDataController extends Controller.extend({
   @action
   clear() {
     log(`Clear clicked`);
-    this.setProperties({
-      currentTrace: 0,
-      currentIndex: 0
-    });
+    this.currentIndex = 0;
+    this.currentTrace = 0;
     this.chartData.clear();
   }
 
   @action
   start() {
     log(`Start clicked`, this._updating);
-    if (this._updating === false) {
-      this.set('_updating', true);
+    if (!this._updating) {
+      this._updating = true;
       later(this, 'update', interval);
     }
   }

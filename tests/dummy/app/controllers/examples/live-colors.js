@@ -55,12 +55,10 @@ export default class ExamplesLiveColorsController extends Controller {
   currentTrace = 1;  // Start on second trace
   currentIndex = 0;
   _updating = false;  // Don't start the timer until user clicks button
-  _revision = 0;
 
+  // FIXME
   _triggerUpdate() {
-    log(`_triggerUpdate incrementing _revision (${this._revision})`);
-    //this.set('chartData.triggerUpdate', (this.get('chartData.triggerUpdate') || 0) + 1);
-    this.incrementProperty('_revision');
+    this.notifyPropertyChange('chartOptions');
   }
 
   update() {

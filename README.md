@@ -84,9 +84,9 @@ export default Route.extend({
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 
-export default class SomeController extends Controller.extend({
-  init() {
-    this._super(...arguments);
+export default class SomeController extends Controller {
+  constructor(...args) {
+    super(...args);
     this.setProperties({
       chartLayout: {
         // Layout options
@@ -99,8 +99,9 @@ export default class SomeController extends Controller.extend({
       // Component will listen for these events and forward them via onPlotlyEvent
       plotlyEvents: ['plotly_restyle']
     });
+      
   }
-}) {
+
   @computed('model.{x,y,type}')
   get chartData() {
     return {

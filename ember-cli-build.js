@@ -8,9 +8,15 @@ module.exports = function (defaults) {
     autoImport: {
       webpack: {
         node: {
+          //__dirname,
+          //__filename,
           global: true,
-          fs: 'empty'
-        }
+        },
+        resolve: {
+          fallback: {
+            "stream": require.resolve("stream-browserify"),
+          },
+        },
       }
     }
   });

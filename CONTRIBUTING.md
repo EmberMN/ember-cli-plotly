@@ -10,9 +10,8 @@
 
 ## Linting
 
-* `npm run lint:hbs`
-* `npm run lint:js`
-* `npm run lint:js -- --fix`
+* `npm run lint` (or `yarn lint`)
+* `npm run lint:fix` (or `yarn lint:fix`)
 
 ## Running tests
 

@@ -12,18 +12,17 @@ function getCoordinates(target, container) {
   };
   const targetRect = target.getBoundingClientRect();
   const t = {
-    x: targetRect.x + targetRect.width/2,
-    y: targetRect.y + targetRect.height/2
+    x: targetRect.x + targetRect.width / 2,
+    y: targetRect.y + targetRect.height / 2,
   };
 
   const coordinates = {
-    x: c.x + (t.x - c.x - targetRect.width/2),
-    y: c.y + (t.y - c.y - targetRect.height/2),
+    x: c.x + (t.x - c.x - targetRect.width / 2),
+    y: c.y + (t.y - c.y - targetRect.height / 2),
   };
   log('coordinates', coordinates, containerRect, targetRect);
   return coordinates;
 }
-
 
 /**
   This helper is designed to work-around the following

@@ -14,11 +14,11 @@ module.exports = function (defaults) {
         },
         resolve: {
           fallback: {
-            "stream": require.resolve("stream-browserify"),
+            stream: require.resolve('stream-browserify'),
           },
         },
-      }
-    }
+      },
+    },
   });
 
   /*

@@ -7,9 +7,9 @@ export default Controller.extend({
       chartData: [],
       chartLayout: {
         xaxis: {},
-        yaxis: {}
+        yaxis: {},
       },
-      chartConfig: {}
+      chartConfig: {},
     });
   },
 });

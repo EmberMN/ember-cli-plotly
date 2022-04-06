@@ -1,10 +1,10 @@
-{{plot-ly
-  chartData=chartData
-  chartLayout=chartLayout
-  chartConfig=chartConfig
-  plotlyEvents=plotlyEvents
-  onPlotlyEvent=(action "onPlotlyEvent")
-}}
+<Plotly
+  @chartData={{this.chartData}}
+  @chartLayout={{this.chartLayout}}
+  @chartConfig={{this.chartConfig}}
+  @plotlyEvents={{this.plotlyEvents}}
+  @onPlotlyEvent={{action "onPlotlyEvent"}}
+/>
 <ul>
   <li>lastClicked: {{lastClicked}}</li>
   <li>lastDoubleClicked: {{lastDoubleClicked}}</li>

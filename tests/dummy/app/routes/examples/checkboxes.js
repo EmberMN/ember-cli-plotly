@@ -1,5 +1,3 @@
 import Route from '@ember/routing/route';
 
-export default class ExamplesCheckboxesRoute extends Route {
-}
-
+export default class ExamplesCheckboxesRoute extends Route {}

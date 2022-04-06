@@ -23,31 +23,33 @@ export default class ExamplesLiveDataController extends Controller {
       return;
     }
 
-    log(`Update called: currentTrace=${this.currentTrace}, currentIndex=${this.currentIndex}`, this.chartData);
+    log(
+      `Update called: currentTrace=${this.currentTrace}, currentIndex=${this.currentIndex}`,
+      this.chartData
+    );
 
     if (!this.chartData[this.currentTrace]) {
       this.chartData.push({
         x: [],
-        y: []
+        y: [],
       });
     }
 
     // Generate some data
     this.chartData[this.currentTrace].x[this.currentIndex] = this.currentIndex;
-    this.chartData[this.currentTrace].y[this.currentIndex] = 100*Math.random();
+    this.chartData[this.currentTrace].y[this.currentIndex] =
+      100 * Math.random();
 
     this.notifyPropertyChange('chartData');
 
     if (this.currentIndex >= 5) {
       this.currentTrace++;
       this.currentIndex = 0;
-    }
-    else {
+    } else {
       this.currentIndex++;
     }
     later(this, 'update', interval);
   }
-
 
   @action
   clear() {

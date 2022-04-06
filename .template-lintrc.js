@@ -2,5 +2,5 @@
 
 module.exports = {
   //extends: 'octane'
-  extends: 'recommended'
+  extends: 'recommended',
 };

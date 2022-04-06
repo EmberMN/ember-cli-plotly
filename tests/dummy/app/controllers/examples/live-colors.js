@@ -16,45 +16,52 @@ const highlightColor = '#d474ff';
 
 // Data to plot
 const n = 101;
-const x = new Array(n).fill(0).map((z,i) => 5*(2*i/(n-1) - 1)); // [-5, ..., 5]
-const sourceData = [{
-  name: "Group 1 (0,1)",
-  mu: 0,
-  sigma: 1,
-  traces: 4,
-  noiseFunction: y => y + 0.2*(2*(Math.random() ** 10) - 1),
-  scaleFactor: 50
-}, {
-  name: "Group 2 (2,2)",
-  mu: 2,
-  sigma: 2,
-  traces: 10,
-  noiseFunction: (y, i) => y + 0.1*Math.sin(2*Math.PI*50*Math.random()*i/n),
-  scaleFactor: 25
-}].map(({ name, mu, sigma, traces, noiseFunction, scaleFactor }) => {
-  const array = [];
-  for (let i=0; i < traces; i++) {
-    array.push({
-      name: `${(i+1)} (${name})`,
-      x,
-      y: x.map(getNormalDistPDF(mu, sigma))
-          .map(y => scaleFactor*y)
+const x = new Array(n).fill(0).map((z, i) => 5 * ((2 * i) / (n - 1) - 1)); // [-5, ..., 5]
+const sourceData = [
+  {
+    name: 'Group 1 (0,1)',
+    mu: 0,
+    sigma: 1,
+    traces: 4,
+    noiseFunction: (y) => y + 0.2 * (2 * Math.random() ** 10 - 1),
+    scaleFactor: 50,
+  },
+  {
+    name: 'Group 2 (2,2)',
+    mu: 2,
+    sigma: 2,
+    traces: 10,
+    noiseFunction: (y, i) =>
+      y + 0.1 * Math.sin((2 * Math.PI * 50 * Math.random() * i) / n),
+    scaleFactor: 25,
+  },
+]
+  .map(({ name, mu, sigma, traces, noiseFunction, scaleFactor }) => {
+    const array = [];
+    for (let i = 0; i < traces; i++) {
+      array.push({
+        name: `${i + 1} (${name})`,
+        x,
+        y: x
+          .map(getNormalDistPDF(mu, sigma))
+          .map((y) => scaleFactor * y)
           .map(noiseFunction),
-      mode: 'lines'
-    });
-  }
-  return array;
-}).reduce((array, set) => {
-  set.forEach(s => array.push(s));
-  return array;
-}, []);
+        mode: 'lines',
+      });
+    }
+    return array;
+  })
+  .reduce((array, set) => {
+    set.forEach((s) => array.push(s));
+    return array;
+  }, []);
 
 export default class ExamplesLiveColorsController extends Controller {
   _isHighlighted = sourceData.map(() => false);
   plotlyEvents = ['plotly_legenddoubleclick'];
-  currentTrace = 1;  // Start on second trace
+  currentTrace = 1; // Start on second trace
   currentIndex = 0;
-  _updating = false;  // Don't start the timer until user clicks button
+  _updating = false; // Don't start the timer until user clicks button
 
   // FIXME
   _triggerUpdate() {
@@ -69,21 +76,26 @@ export default class ExamplesLiveColorsController extends Controller {
 
     const currentTrace = this.currentTrace;
     const currentIndex = this.currentIndex;
-    log(`Update called: currentTrace=${currentTrace}, currentIndex=${currentIndex}`, this.get(`chartData`));
+    log(
+      `Update called: currentTrace=${currentTrace}, currentIndex=${currentIndex}`,
+      this.get(`chartData`)
+    );
 
     // Prepare to do next point
     if (currentIndex >= sourceData[currentTrace].x.length) {
       // Stop when we've plotted all the data
       if (currentTrace >= sourceData.length) {
-        log(`currentIndex (${currentIndex}) >= sourceData[currentTrace].x.length (${currentIndex >= sourceData[currentTrace].x.length})`);
+        log(
+          `currentIndex (${currentIndex}) >= sourceData[currentTrace].x.length (${
+            currentIndex >= sourceData[currentTrace].x.length
+          })`
+        );
         this.set('_updating', false);
-      }
-      else {
+      } else {
         this.set('currentTrace', currentTrace + 1);
         this.set('currentIndex', 0);
       }
-    }
-    else {
+    } else {
       this.set('currentIndex', 1 + currentIndex);
     }
 
@@ -94,7 +106,11 @@ export default class ExamplesLiveColorsController extends Controller {
   }
 
   _toggleHighlighting(curveNumber) {
-    log(`_toggleHighlighting(${curveNumber}) changing ${this._isHighlighted[curveNumber]} -> ${!this._isHighlighted[curveNumber]}`);
+    log(
+      `_toggleHighlighting(${curveNumber}) changing ${
+        this._isHighlighted[curveNumber]
+      } -> ${!this._isHighlighted[curveNumber]}`
+    );
     this._isHighlighted[curveNumber] = !this._isHighlighted[curveNumber];
     this._triggerUpdate();
   }
@@ -110,12 +126,23 @@ export default class ExamplesLiveColorsController extends Controller {
       return ct;
     })();
     const currentIndex = this.currentIndex;
-    log(`Computing chartData (currentTrace=${currentTrace}, currentIndex=${currentIndex})`);
+    log(
+      `Computing chartData (currentTrace=${currentTrace}, currentIndex=${currentIndex})`
+    );
     // We're going to copy sourceData (don't modify it!) into our own var here where we can set colors, slice to animate, etc.
     // For improved performance we could maintain this state instead of rebuilding it every time
-    const chartData = JSON.parse(JSON.stringify(sourceData)).slice(0, currentTrace + 1); // FIXME: sloppy
-    chartData[currentTrace].x = chartData[currentTrace].x.slice(0, currentIndex + 1);
-    chartData[currentTrace].y = chartData[currentTrace].y.slice(0, currentIndex + 1);
+    const chartData = JSON.parse(JSON.stringify(sourceData)).slice(
+      0,
+      currentTrace + 1
+    ); // FIXME: sloppy
+    chartData[currentTrace].x = chartData[currentTrace].x.slice(
+      0,
+      currentIndex + 1
+    );
+    chartData[currentTrace].y = chartData[currentTrace].y.slice(
+      0,
+      currentIndex + 1
+    );
 
     // Apply styling
     chartData.forEach((trace, i, array) => {
@@ -125,8 +152,7 @@ export default class ExamplesLiveColorsController extends Controller {
       if (i === array.length - 1) {
         // Last trace (= active trace)
         trace.line.color = activeColor;
-      }
-      else {
+      } else {
         trace.line.color = passiveColor;
       }
 
@@ -148,7 +174,7 @@ export default class ExamplesLiveColorsController extends Controller {
     log(`Clear clicked`);
     this.setProperties({
       currentTrace: 0,
-      currentIndex: 0
+      currentIndex: 0,
     });
   }
 
@@ -179,6 +205,6 @@ export default class ExamplesLiveColorsController extends Controller {
     plotly_legenddoubleclick(eventData) {
       this._toggleHighlighting(eventData.curveNumber);
       return false; // prevent default behavior (hiding all other traces)
-    }
+    },
   };
 }

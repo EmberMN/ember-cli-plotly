@@ -1,11 +1,14 @@
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import Ember from 'ember';
 
 import { debounce, scheduleOnce } from '@ember/runloop';
 import { buildWaiter } from '@ember/test-waiters';
 const waiter = buildWaiter('ember-cli-plotly:component-loaded');
+
+// TODO: It would be nice if we could automatically build/pack
+//       the parts of plotly we need/use when webpack runs...
+import Plotly from 'plotly.js/dist/plotly';
 
 import { getLoggingFunctions } from 'ember-cli-plotly/utils/log';
 const { log, logVerbose, warn } = getLoggingFunctions('ember-cli-plotly');
@@ -72,7 +75,6 @@ export const knownPlotlyEvents = [
 ].map((suffix) => `plotly_${suffix}`);
 
 export default class PlotlyComponent extends Component {
-  _plotly = import('plotly.js/dist/plotly').then((module) => module.default);
   plotlyContainerElementId = `plotly-component-${Date.now()}-${Math.floor(
     10000 * Math.random()
   )}`;
@@ -82,14 +84,11 @@ export default class PlotlyComponent extends Component {
     log(`constructor running`);
     if (Ember.testing) {
       const token = waiter.beginAsync();
-      this._plotly.finally(() => {
+      plotly.finally(() => {
         waiter.endAsync(token);
       });
     }
-    this._plotly.then(() => {
-      log(`plotly ready`);
-      this._bindPlotlyEventListeners();
-    });
+    this._bindPlotlyEventListeners();
   }
 
   willDestroy() {
@@ -144,9 +143,7 @@ export default class PlotlyComponent extends Component {
 
   _onResize() {
     log('_onResize firing');
-    this._plotly.then((Plotly) =>
-      Plotly.Plots.resize(this.plotlyContainerElementId)
-    );
+    Plotly.Plots.resize(this.plotlyContainerElementId);
   }
 
   _boundResizeEventHandler() {} // overwritten in _bindPlotlyEventListeners
@@ -163,49 +160,38 @@ export default class PlotlyComponent extends Component {
 
   @action
   _newPlot() {
-    logVerbose(`_newPlot`);
-    this._plotly.then((Plotly) => {
-      logVerbose(`_newPlot running`);
-      const id = this.plotlyContainerElementId;
-      const { chartData, chartLayout, chartConfig } = this._parameters;
-      this._unbindPlotlyEventListeners();
-      log('About to call Plotly.newPlot');
-      Plotly.newPlot(id, chartData, chartLayout, chartConfig)
-        .then(() => {
-          log('newPlot finished');
-          this._bindPlotlyEventListeners();
-          // TODO: Hook
-        })
-        .catch((e, ...args) => {
-          warn(`Plotly.newPlot resulted in rejected promise`, e, ...args);
-        });
-    });
+    logVerbose(`_newPlot running`);
+    const id = this.plotlyContainerElementId;
+    const { chartData, chartLayout, chartConfig } = this._parameters;
+    this._unbindPlotlyEventListeners();
+    log('About to call Plotly.newPlot');
+    Plotly.newPlot(id, chartData, chartLayout, chartConfig)
+      .then(() => {
+        log('newPlot finished');
+        this._bindPlotlyEventListeners();
+        // TODO: Hook
+      })
+      .catch((e, ...args) => {
+        warn(`Plotly.newPlot resulted in rejected promise`, e, ...args);
+      });
   }
 
   @action
-  _react() {
-    logVerbose(`_react`);
-    this._plotly.then((Plotly) => {
-      logVerbose(`_react running`);
-      if (this._isDomElementBad()) {
-        warn(
-          `_react aborting since element (or its ID) is not available or component is (being) destroyed.`
-        );
-        return;
-      }
-      const id = this.plotlyContainerElementId;
-      const { chartData, chartLayout, chartConfig } = this._parameters;
-      // Force update
-      chartLayout.datarevision += 1;
-      log('About to call Plotly.react', chartData, chartLayout, chartConfig);
-      Plotly.react(id, chartData, chartLayout, chartConfig)
-        .then(() => {
-          log('react finished');
-          // TODO: Hook
-        })
-        .catch((e, ...args) => {
-          warn(`Plotly.react resulted in rejected promise`, e, ...args);
-        });
-    });
+  async _react() {
+    logVerbose(`_react running`);
+    if (this.isDestroying) {
+      warn(`_react aborting since component is (being) destroyed.`);
+      return;
+    }
+    const id = this.plotlyContainerElementId;
+    const { chartData, chartLayout, chartConfig } = this._parameters;
+    // Force update
+    log('About to call Plotly.react', chartData, chartLayout, chartConfig);
+    try {
+      await Plotly.react(id, chartData, chartLayout, chartConfig);
+    } catch (e) {
+      throw Error('Plotly.react failed', { cause: e });
+    }
+    log('react finished');
   }
 }

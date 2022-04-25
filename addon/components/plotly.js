@@ -1,5 +1,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
 import Ember from 'ember';
 
 import { debounce, scheduleOnce } from '@ember/runloop';
@@ -7,7 +8,7 @@ import { buildWaiter } from '@ember/test-waiters';
 const waiter = buildWaiter('ember-cli-plotly:component-loaded');
 
 import { getLoggingFunctions } from 'ember-cli-plotly/utils/log';
-const { log, warn } = getLoggingFunctions('ember-cli-plotly');
+const { log, logVerbose, warn } = getLoggingFunctions('ember-cli-plotly');
 
 // TODO: Make configurable via ENV
 // https://github.com/plotly/plotly.js/blob/5bc25b490702e5ed61265207833dbd58e8ab27f1/src/plot_api/plot_config.js#L22-L184
@@ -160,6 +161,7 @@ export default class PlotlyComponent extends Component {
     window.removeEventListener('resize', this._boundResizeEventHandler);
   }
 
+  @action
   _newPlot() {
     logVerbose(`_newPlot`);
     this._plotly.then((Plotly) => {
@@ -180,6 +182,7 @@ export default class PlotlyComponent extends Component {
     });
   }
 
+  @action
   _react() {
     logVerbose(`_react`);
     this._plotly.then((Plotly) => {

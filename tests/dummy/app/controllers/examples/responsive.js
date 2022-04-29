@@ -4,7 +4,7 @@ import getNormalDistPDF from 'dummy/utils/get-normal-dist-pdf';
 
 const n = 1001;
 const x = new Array(n).fill(0).map((z, i) => 10 * ((2 * i) / (n - 1) - 1)); // [-10, ..., 10]
-const chartData = [
+const data = [
   {
     x,
     y: x.map(getNormalDistPDF(0, 1)),
@@ -23,7 +23,7 @@ export default Controller.extend({
   init() {
     this._super(...arguments);
     this.setProperties({
-      chartData,
+      data,
     });
   },
 });

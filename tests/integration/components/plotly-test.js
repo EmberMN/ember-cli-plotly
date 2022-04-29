@@ -60,7 +60,7 @@ module('Integration | Component | plotly', function (hooks) {
       },
     ];
     this.set('traces', traces);
-    await render(hbs`<Plotly @chartData={{this.traces}} />`);
+    await render(hbs`<Plotly @data={{this.traces}} />`);
     assert.strictEqual(
       this.element.querySelectorAll(legendEntrySelector).length,
       2,
@@ -100,7 +100,7 @@ module('Integration | Component | plotly', function (hooks) {
 
     this.setProperties({
       // Put a big dot at the origin
-      chartData: [
+      data: [
         {
           x: [0],
           y: [0],
@@ -111,7 +111,7 @@ module('Integration | Component | plotly', function (hooks) {
           },
         },
       ],
-      chartLayout: {},
+      layout: {},
       onPlotlyClick(eventData) {
         log(`onPlotlyClick fired`, eventData);
         assert.strictEqual(
@@ -124,8 +124,8 @@ module('Integration | Component | plotly', function (hooks) {
     });
     await render(
       hbs`<Plotly
-        @chartData={{this.chartData}}
-        @chartLayout={{this.chartLayout}}
+        @data={{this.data}}
+        @layout={{this.layout}}
         @on={{hash
           plotly_click=this.onPlotlyClick
         }}

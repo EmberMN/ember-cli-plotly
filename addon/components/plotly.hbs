@@ -1,11 +1,11 @@
 {{#if this._showStateForDebugging}}
   <button type="button" {{on "click" this.update}}>Force update</button>
-  {{! we "use" this.chartData here to ensure recomputation }}
+  {{! we "use" this.data here to ensure recomputation }}
   <pre style="max-height: 200px; overflow-y: scroll;">
-{{print-json this.chartData}}
+{{print-json this.data}}
   </pre>
 {{else}}
-  {{look-but-do-not-touch this.chartConfig this.chartData this.chartLayout}}
+  {{look-but-do-not-touch this.config this.data this.layout}}
 {{/if}}
 <div
   id={{this.plotlyContainerElementId}}

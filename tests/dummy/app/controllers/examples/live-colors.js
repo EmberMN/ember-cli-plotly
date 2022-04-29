@@ -78,7 +78,7 @@ export default class ExamplesLiveColorsController extends Controller {
     const currentIndex = this.currentIndex;
     log(
       `Update called: currentTrace=${currentTrace}, currentIndex=${currentIndex}`,
-      this.get(`chartData`)
+      this.get(`data`)
     );
 
     // Prepare to do next point
@@ -116,7 +116,7 @@ export default class ExamplesLiveColorsController extends Controller {
   }
 
   @computed('currentTrace', 'currentIndex', '_isHighlighted.[]', '_revision')
-  get chartData() {
+  get data() {
     const currentTrace = (() => {
       // FIXME: Shouldn't need to sanity check this
       let ct = this.currentTrace;
@@ -127,25 +127,25 @@ export default class ExamplesLiveColorsController extends Controller {
     })();
     const currentIndex = this.currentIndex;
     log(
-      `Computing chartData (currentTrace=${currentTrace}, currentIndex=${currentIndex})`
+      `Computing data (currentTrace=${currentTrace}, currentIndex=${currentIndex})`
     );
     // We're going to copy sourceData (don't modify it!) into our own var here where we can set colors, slice to animate, etc.
     // For improved performance we could maintain this state instead of rebuilding it every time
-    const chartData = JSON.parse(JSON.stringify(sourceData)).slice(
+    const data = JSON.parse(JSON.stringify(sourceData)).slice(
       0,
       currentTrace + 1
     ); // FIXME: sloppy
-    chartData[currentTrace].x = chartData[currentTrace].x.slice(
+    data[currentTrace].x = data[currentTrace].x.slice(
       0,
       currentIndex + 1
     );
-    chartData[currentTrace].y = chartData[currentTrace].y.slice(
+    data[currentTrace].y = data[currentTrace].y.slice(
       0,
       currentIndex + 1
     );
 
     // Apply styling
-    chartData.forEach((trace, i, array) => {
+    data.forEach((trace, i, array) => {
       trace.line = trace.line || {};
 
       // Active/passive coloring
@@ -163,10 +163,10 @@ export default class ExamplesLiveColorsController extends Controller {
       }
     });
 
-    // TODO: See if there's a cleaner way to update than by manually re-triggering when chartData is computed
-    chartData.triggerUpdate = this._revision;
+    // TODO: See if there's a cleaner way to update than by manually re-triggering when data is computed
+    data.triggerUpdate = this._revision;
 
-    return chartData;
+    return data;
   }
 
   @action

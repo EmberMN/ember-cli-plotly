@@ -13,6 +13,11 @@ This addon strives to make it easy & efficient to use
 
 ```
 ember install ember-cli-plotly
+# or (since this addon does not have any special blueprints, etc.)
+npm install --save-dev ember-cli-plotly
+
+# plotly.js is a peer dependency of this addon
+npm install --save-dev plotly.js
 ```
 
 ## Usage
@@ -23,18 +28,18 @@ ember install ember-cli-plotly
 
 ```handlebars
 <Plotly
-  @chartData={{array
+  @data={{array
     (hash
-      name='y = 2x' 
+      name="y = 2x" 
       x=(array 1 2 3) 
       y=(array 2 4 6)
-      type='scatter'
+      type="scatter"
     ) 
     (hash 
-      name='y = -x -1'
+      name="y = -x -1"
       x=(array 0 2) 
       y=(array -1 -3)
-      type='scatter'
+      type="scatter"
     ) 
   }}
 />
@@ -84,11 +89,11 @@ import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 
 export default class SomeController extends Controller {
-  chartLayout = {
+  layout = {
    // Layout options
    // See https://plot.ly/javascript/reference/#layout
   };
-  chartConfig = {
+  config = {
    // Override default options from config/environment.js & plotly.js
    // See https://github.com/plotly/plotly.js/blob/master/src/plot_api/plot_config.js
   };
@@ -96,7 +101,7 @@ export default class SomeController extends Controller {
   plotlyEvents = ['plotly_restyle'];
 
   @computed('model.{x,y,type}')
-  get chartData() {
+  get data() {
     return {
       x: this.get('model.x'),
       y: this.get('model.y'),
@@ -124,9 +129,9 @@ export default class SomeController extends Controller {
 ```handlebars
 {{! my-app/app/templates/somewhere.hbs }}
 <Plotly
-  @chartData=chartData
-  @chartLayout=chartLayout
-  @chartConfig=chartConfig
+  @data=data
+  @layout=layout
+  @config=config
   @onPlotlyEvent=onPlotlyEvent
   @isResponsive=true
 />

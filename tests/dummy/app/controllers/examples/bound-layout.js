@@ -78,8 +78,8 @@ export default class BoundLayoutController extends Controller {
 
   @tracked nPoints = 256;
   @cached
-  get chartData() {
-    log(`computing chartData; useFixedData=${this.useFixedData}`);
+  get data() {
+    log(`computing data; useFixedData=${this.useFixedData}`);
     if (this.useFixedData) {
       return this.fixedData;
     }
@@ -92,9 +92,9 @@ export default class BoundLayoutController extends Controller {
     );
   }
 
-  get chartLayout() {
+  get layout() {
     log(
-      `computing chartLayout`,
+      `computing layout`,
       this.xaxis.min,
       this.xaxis.max,
       this.yaxis.min,

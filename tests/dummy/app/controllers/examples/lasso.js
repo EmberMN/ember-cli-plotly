@@ -7,8 +7,8 @@ import debug from 'debug';
 const log = debug('ember-cli-plotly:dummy:lasso');
 
 export default class LassoExampleController extends Controller {
-  @tracked chartConfig = {};
-  @tracked chartData = generateDataSets().map((trace) =>
+  @tracked config = {};
+  @tracked data = generateDataSets().map((trace) =>
     Object.assign(trace, {
       mode: 'lines+markers',
       line: {
@@ -16,17 +16,17 @@ export default class LassoExampleController extends Controller {
       },
     })
   );
-  @tracked chartLayout = {
+  @tracked layout = {
     dragmode: 'lasso',
   };
   @tracked selectedPoints = [];
 
-  //@computed('chartData', 'selectedPoints.@each.curveNumber')
+  //@computed('data', 'selectedPoints.@each.curveNumber')
   get selectedTraces() {
     const selectedPoints = this.selectedPoints;
     log(`selectedTraces got selectedPoints =`, selectedPoints);
     if (selectedPoints) {
-      const chartData = this.chartData;
+      const data = this.data;
       const result = selectedPoints
         .map((point) => point.curveNumber)
         .reduce((a, sp) => {
@@ -38,7 +38,7 @@ export default class LassoExampleController extends Controller {
         .map((i) => {
           return {
             index: i,
-            name: chartData[i].name || '',
+            name: data[i].name || '',
           };
         });
       return result;

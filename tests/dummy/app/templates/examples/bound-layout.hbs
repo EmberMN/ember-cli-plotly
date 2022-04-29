@@ -49,16 +49,16 @@
     </tbody>
   </table>
   <Plotly
-    @chartData={{this.chartData}}
-    @chartLayout={{this.chartLayout}}
+    @data={{this.data}}
+    @layout={{this.layout}}
   />
   <pre>
 Computed:
-X: [{{this.chartLayout.xaxis.range}}]
-Y: [{{this.chartLayout.yaxis.range}}]
+X: [{{this.layout.xaxis.range}}]
+Y: [{{this.layout.yaxis.range}}]
 
 Data:
-x -> {{get this.chartData "0.x"}}
-y -> {{get this.chartData "0.y"}}
+x -> {{get this.data "0.x"}}
+y -> {{get this.data "0.y"}}
   </pre>
 </section>

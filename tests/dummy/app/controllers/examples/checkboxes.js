@@ -60,8 +60,8 @@ export default class CheckBoxesController extends Controller {
     },
   ].map((props) => new Series(props));
 
-  get chartData() {
-    console.log('getter called for chartData', this.dataSets);
+  get data() {
+    console.log('getter called for data', this.dataSets);
     return this.dataSets.filter(({ isPassedToPlotly }) => isPassedToPlotly);
   }
 }

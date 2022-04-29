@@ -19,10 +19,10 @@ import { getLoggingFunctions } from 'ember-cli-plotly/utils/log';
 const { log, logVerbose, warn } = getLoggingFunctions('ember-cli-plotly');
 
 // Args:
-//   @chartConfig=(config object per Plotly.js API)
+//   @config=(config object per Plotly.js API)
 //      ^^^ inherits from config.environment['ember-cli-plotly'].defaultConfig
-//   @chartData=(data object per Plotly.js API)
-//   @chartLayout=(layout object per Plotly.js API)
+//   @data=(data object per Plotly.js API)
+//   @layout=(layout object per Plotly.js API)
 //      ^^^ inherits from config.environment['ember-cli-plotly'].defaultLayout
 //   @on={{hash eventName=handlerFunction}}
 //   (the following all inherit from corresponding config.environment['ember-cli-plotly'] keys)
@@ -40,21 +40,21 @@ export default class PlotlyComponent extends Component {
   )}`;
 
   get resizeDebounceInterval() {
-    return this.args.chartLayout ?? ecPlotlyOptions.resizeDebounceInterval;
+    return this.args.layout ?? ecPlotlyOptions.resizeDebounceInterval;
   }
   @tracked
   options = {
-    debounceInterval: 50, // shared for both chartData update & window resize
+    debounceInterval: 50, // shared for both data update & window resize
     isResponsive: true,
     watchChartDataForUpdates: true,
     ...ecPlotlyOptions,
   };
 
   // Merge user-provided parameters with defaults
-  get chartConfig() {
+  get config() {
     return {
       ...ecPlotlyOptions.defaultPlotlyConfig,
-      ...this.args.chartConfig,
+      ...this.args.config,
     };
   }
 
@@ -63,27 +63,27 @@ export default class PlotlyComponent extends Component {
   //        Nevertheless, glimmer/octane autotracking will not cache by default
   //        without @cached, so this should at least work, but it is a problem
   //        waiting to happen (e.g. can easily make an infinite loop).
-  get chartData() {
+  get data() {
     if (this.hasCreatedPlot) {
       debounce(this, this.update, {}, this.debounceInterval, true);
     }
-    return this.args.chartData;
+    return this.args.data;
   }
 
-  // Note 1: when the chartData array is modified after plot has
+  // Note 1: when the data array is modified after plot has
   //         been created then datarevision needs to be updated
   //         in order for Plotly.react to apply the changes.
   //         See https://plotly.com/python/reference/layout/#layout-datarevision
   // Note 2: user interactions like zooming will be lost/reset during update
   //         unless the `uirevision` layout property is set and unchanged.
   //         See https://plotly.com/javascript/uirevision/
-  get chartLayout() {
+  get layout() {
     return {
       datarevision: 0,
       uirevision: 0,
       ...ecPlotlyOptions.defaultConfig,
       ...(document.getElementById(this.plotlyContainerElementId)?.layout || {}),
-      ...this.args.chartLayout,
+      ...this.args.layout,
     };
   }
 
@@ -113,9 +113,9 @@ export default class PlotlyComponent extends Component {
     }
     const plotlyArgs = [
       this.plotlyContainerElementId,
-      this.chartData,
-      this.chartLayout,
-      this.chartConfig,
+      this.data,
+      this.layout,
+      this.config,
     ];
     const methodName = this.hasCreatedPlot ? 'react' : 'newPlot';
     log(`About to call Plotly.${methodName}`, ...plotlyArgs);

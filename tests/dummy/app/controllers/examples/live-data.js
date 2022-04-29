@@ -9,9 +9,9 @@ const log = debug('ember-cli-plotly:dummy:live-data');
 const numXpoints = 10;
 
 export default class ExamplesLiveDataController extends Controller {
-  @tracked chartConfig = {};
-  @tracked chartData = [];
-  @tracked chartLayout = {};
+  @tracked config = {};
+  @tracked data = [];
+  @tracked layout = {};
   @tracked currentIndex = 0;
   @tracked currentTrace = 0;
   @tracked interval = 1000;
@@ -25,22 +25,22 @@ export default class ExamplesLiveDataController extends Controller {
 
     log(
       `Update called: currentTrace=${this.currentTrace}, currentIndex=${this.currentIndex}`,
-      this.chartData
+      this.data
     );
 
-    if (!this.chartData[this.currentTrace]) {
-      this.chartData.push({
+    if (!this.data[this.currentTrace]) {
+      this.data.push({
         x: [],
         y: [],
       });
     }
 
     // Generate some data
-    this.chartData[this.currentTrace].x[this.currentIndex] = this.currentIndex;
-    this.chartData[this.currentTrace].y[this.currentIndex] =
+    this.data[this.currentTrace].x[this.currentIndex] = this.currentIndex;
+    this.data[this.currentTrace].y[this.currentIndex] =
       100 * Math.random();
 
-    this.notifyPropertyChange('chartData');
+    this.notifyPropertyChange('data');
 
     if (this.currentIndex >= numXpoints) {
       this.currentTrace++;
@@ -56,7 +56,7 @@ export default class ExamplesLiveDataController extends Controller {
     log(`Clear clicked`);
     this.currentIndex = 0;
     this.currentTrace = 0;
-    this.chartData.length = 0;
+    this.data.length = 0;
   }
 
   @action

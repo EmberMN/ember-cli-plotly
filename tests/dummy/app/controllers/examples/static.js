@@ -5,7 +5,7 @@ export default class StaticExampleController extends Controller {
   angles = new Array(60)
     .fill(0)
     .map((z, i) => -Math.PI + (i * 2 * Math.PI) / 60);
-  chartData = [
+  data = [
     {
       x: this.x1,
       y: this.x1.map((x) => Math.pow(x, 2)),
@@ -36,7 +36,7 @@ export default class StaticExampleController extends Controller {
       },
     },
   ];
-  chartLayout = {
+  layout = {
     xaxis: {
       //range: [-3.5, 3.5]
     },
@@ -44,5 +44,5 @@ export default class StaticExampleController extends Controller {
       //range: [-15, 15]
     },
   };
-  chartConfig = {};
+  config = {};
 }

@@ -1,32 +1,27 @@
+import { tracked } from '@glimmer/tracking';
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import generateDataSets from 'dummy/utils/datasets';
 
 import debug from 'debug';
 const log = debug('ember-cli-plotly:dummy:lasso');
 
-export default class LassoExampleController extends Controller.extend({
-  init() {
-    this._super(...arguments);
-    this.setProperties({
-      chartData: generateDataSets().map((trace) =>
-        Object.assign(trace, {
-          mode: 'lines+markers',
-          line: {
-            shape: 'spline',
-          },
-        })
-      ),
-      chartLayout: {
-        dragmode: 'lasso',
+export default class LassoExampleController extends Controller {
+  @tracked chartConfig = {};
+  @tracked chartData = generateDataSets().map((trace) =>
+    Object.assign(trace, {
+      mode: 'lines+markers',
+      line: {
+        shape: 'spline',
       },
-      chartConfig: {},
-      plotlyEvents: ['plotly_selected'],
-      selectedPoints: [],
-    });
-  },
-}) {
-  @computed('chartData', 'selectedPoints.@each.curveNumber')
+    })
+  );
+  @tracked chartLayout = {
+    dragmode: 'lasso',
+  };
+  @tracked selectedPoints = [];
+
+  //@computed('chartData', 'selectedPoints.@each.curveNumber')
   get selectedTraces() {
     const selectedPoints = this.selectedPoints;
     log(`selectedTraces got selectedPoints =`, selectedPoints);
@@ -53,11 +48,15 @@ export default class LassoExampleController extends Controller.extend({
   }
 
   @action
-  onPlotlyEvent(eventName, eventData) {
-    log(`onPlotlyEvent got ${eventName} -->`, eventData);
-    this.set(
-      'selectedPoints',
-      eventData.points.map((p) => {
+  onPlotlyClick(eventData) {
+    log(`onPlotlyClick -->`, eventData);
+  }
+
+  @action
+  onPlotlySelected(eventData) {
+    log(`onPlotlySelected -->`, eventData);
+    if (eventData?.points instanceof Array) {
+      this.selectedPoints = eventData.points.map((p) => {
         return {
           curveNumber: p.curveNumber,
           pointIndex: p.pointIndex,
@@ -65,7 +64,7 @@ export default class LassoExampleController extends Controller.extend({
           x: p.x,
           y: p.y,
         };
-      })
-    );
+      });
+    }
   }
 }

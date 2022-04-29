@@ -1,0 +1,15 @@
+section.bound-layout button {
+  padding: 10px;
+  min-width: 200px;
+  min-height: 32px;
+}
+section.bound-layout table {
+  width: 100%
+}
+section.bound-layout input[type=range] {
+  width: calc(90% - 40px)
+}
+section.bound-layout input[type=number] {
+  width: 40px;
+  margin-right: 10px;
+}

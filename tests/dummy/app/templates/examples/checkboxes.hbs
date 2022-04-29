@@ -1,15 +1,17 @@
 <ul>
   {{#each this.dataSets as |dataSet|}}
     <li>
-      <Input @type="checkbox" name={{dataSet.name}} @checked={{dataSet.isPassedToPlotly}} />
+      <Input
+        id={{dataSet.name}}
+        @type="checkbox"
+        @checked={{dataSet.isPassedToPlotly}}
+      />
       <label for={{dataSet.name}}>{{dataSet.name}}</label>
     </li>
   {{/each}}
 </ul>
 <Plotly
-  foo="bar"
   @chartData={{this.chartData}}
   @chartLayout={{this.chartLayout}}
   @chartConfig={{this.chartConfig}}
 />
-{{log "HBS-DEBUG this.chartData" this.chartData}}

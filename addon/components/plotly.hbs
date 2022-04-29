@@ -1,11 +1,18 @@
+{{#if this._showStateForDebugging}}
+  <button type="button" {{on "click" this.update}}>Force update</button>
+  {{! we "use" this.chartData here to ensure recomputation }}
+  <pre style="max-height: 200px; overflow-y: scroll;">
+{{print-json this.chartData}}
+  </pre>
+{{else}}
+  {{look-but-do-not-touch this.chartConfig this.chartData this.chartLayout}}
+{{/if}}
 <div
   id={{this.plotlyContainerElementId}}
-  {{did-insert this._newPlot}}
-  {{did-update this._react}}
+  {{did-insert this.update}}
+  {{did-update this.update}}
+  {{will-destroy this.unbindPlotlyEventListeners}}
   ...attributes
 >
-  <div style="display">
-    {{}}
-  </div>
-  {{yield}}
+  {{!yield}}
 </div>

@@ -1,9 +1,11 @@
-{{plot-ly
-  chartData=chartData
-  chartLayout=chartLayout
-  chartConfig=chartConfig
-  plotlyEvents=plotlyEvents
-  onPlotlyEvent=(action "onPlotlyEvent")
-}}
-Selected traces: <pre>{{json-stringify selectedTraces spaces=null}}</pre>
-Selected points: <pre>{{json-stringify selectedPoints spaces=2}}</pre>
+<Plotly
+  @chartData={{this.chartData}}
+  @chartLayout={{this.chartLayout}}
+  @chartConfig={{this.chartConfig}}
+  @on={{hash
+    plotly_click=this.onPlotlyClick
+    plotly_selected=this.onPlotlySelected
+  }}
+/>
+Selected traces: <pre>{{json-stringify this.selectedTraces spaces=null}}</pre>
+Selected points: <pre>{{json-stringify this.selectedPoints spaces=2}}</pre>

@@ -11,7 +11,7 @@ class Series {
   @tracked x;
   @tracked y;
 
-  constructor({ name, isPassedToPlotly, x, y}) {
+  constructor({ name, isPassedToPlotly, x, y }) {
     this.name = name;
     this.isPassedToPlotly = isPassedToPlotly;
     this.x = x;

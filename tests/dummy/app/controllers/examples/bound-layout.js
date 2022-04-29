@@ -1,70 +1,109 @@
+import { tracked, cached } from '@glimmer/tracking';
 import Controller from '@ember/controller';
-import { computed, setProperties } from '@ember/object';
+import { action } from '@ember/object';
 import { getLoggingFunctions } from 'ember-cli-plotly/utils/log';
 const { log } = getLoggingFunctions('ember-cli-plotly:bound-layout');
 
-const n = Math.pow(2, 16);
-const x = new Array(n).fill(0).map((z, i) => 100 * ((2 * i) / (n - 1) - 1)); // [-10, ..., 10]
+const exampleFunctions = [
+  {
+    name: 'y=-x',
+    y: (x) => -x,
+  },
+  {
+    name: 'y=x',
+    y: (x) => x,
+  },
+  {
+    name: 'y=1/x',
+    y: (x) => 1 / x,
+  },
+  {
+    name: 'y=sin(pi*x)/(pi*x)',
+    y: (x) => Math.sin(Math.PI * x) / (Math.PI * x),
+  },
+  {
+    name: 'y=sin(1/x)',
+    y: (x) => Math.sin(1 / x),
+  },
+  {
+    name: 'y=log2(x)',
+    y: (x) => Math.log2(x),
+  },
+  {
+    name: 'y=2^x',
+    y: (x) => Math.pow(2, x),
+  },
+];
+
+function linspace(min = -10, max = 10, n = 100) {
+  n = Math.round(n); // Force n to be an integer
+  return new Array(n).fill(0).map((z, i) => min + (i * (max - min)) / (n - 1));
+}
+
+function getSampleData(funcs, xs) {
+  return funcs.map(({ name, y }) => {
+    return {
+      name,
+      x: xs,
+      y: xs.map(y),
+    };
+  });
+}
 
 export default class BoundLayoutController extends Controller {
-  constructor() {
-    super(...arguments);
-    setProperties(this, {
-      xaxis: {
-        min: -10,
-        max: 10,
-      },
-      yaxis: {
-        min: -2,
-        max: 2,
-      },
-      chartData: [
-        {
-          name: 'Very long line',
-          x: [-1e6, 1e6],
-          y: [1e6, -1e6],
-        },
-        {
-          name: 'x',
-          x,
-          y: x,
-        },
-        {
-          name: '1/x',
-          x,
-          y: x.map((x) => 1 / x),
-        },
-        {
-          name: 'normalized sinc',
-          x,
-          y: x.map((x) => Math.sin(Math.PI * x) / (Math.PI * x)),
-        },
-        {
-          name: 'sin(1/x)',
-          x,
-          y: x.map((x) => Math.sin(1 / x)),
-        },
-        {
-          name: 'log2',
-          x,
-          y: x.map((x) => Math.log2(x)),
-        },
-        {
-          name: '2^x',
-          x,
-          y: x.map((x) => Math.pow(2, x)),
-        },
-      ],
-    });
+  xaxis = {
+    @tracked min: -10,
+    @tracked max: 10,
+  };
+
+  yaxis = {
+    @tracked min: -2,
+    @tracked max: 2,
+  };
+
+  @tracked useFixedData = false;
+
+  @action
+  toggleUseFixedData() {
+    this.useFixedData = !this.useFixedData;
   }
 
-  @computed('xaxis.{min,max}', 'yaxis.{min,max}')
+  @cached
+  get fixedData() {
+    return getSampleData(
+      exampleFunctions,
+      linspace(-1e3, 1e3, Math.pow(2, 16))
+    );
+  }
+
+  @tracked nPoints = 256;
+  @cached
+  get chartData() {
+    log(`computing chartData; useFixedData=${this.useFixedData}`);
+    if (this.useFixedData) {
+      return this.fixedData;
+    }
+    log(
+      `xmin=${this.xaxis.min}, xmax=${this.xaxis.max}, nPoints=${this.nPoints}`
+    );
+    return getSampleData(
+      exampleFunctions,
+      linspace(this.xaxis.min, this.xaxis.max, this.nPoints)
+    );
+  }
+
   get chartLayout() {
-    log('computing chartLayout');
-    const getRange = (axisPropName) => {
-      let min = parseFloat(this.get(`${axisPropName}.min`));
+    log(
+      `computing chartLayout`,
+      this.xaxis.min,
+      this.xaxis.max,
+      this.yaxis.min,
+      this.yaxis.max
+    );
+    const getRange = (axis) => {
+      let min = parseFloat(this[axis].min);
       if (typeof min !== 'number') min = 0;
-      let max = parseFloat(this.get(`${axisPropName}.max`));
+      let max = parseFloat(this[axis].max);
       if (typeof max !== 'number') max = min + 1;
       return [min, max];
     };

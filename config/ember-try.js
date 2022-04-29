@@ -5,7 +5,7 @@ const { embroiderSafe, embroiderOptimized } = require('@embroider/test-setup');
 
 module.exports = async function () {
   return {
-    useYarn: true,
+    useYarn: false, // not sure if this setting affects peer dependency problem with yarn 1.x
     scenarios: [
       {
         name: 'ember-lts-3.16',

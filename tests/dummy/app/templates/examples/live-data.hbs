@@ -5,8 +5,10 @@
   {{on "plotly_click" (action "onPlotlyEvent" "click")}}
 />
 
-<button onclick={{action "start"}} type="button">Start</button>
-<button onclick={{action "stop"}} type="button">Stop</button>
-<button onclick={{action "clear"}} type="button">Clear</button>
+<Input @type="number" min="100" max="3600" step="100" @value={{this.interval}} />
+
+<button {{on "click" this.start}} type="button">Start</button>
+<button {{on "click" this.stop}} type="button">Stop</button>
+<button {{on "click" this.clear}} type="button">Clear</button>
 
 currentTrace: {{this.currentTrace}}, currentIndex: {{this.currentIndex}}

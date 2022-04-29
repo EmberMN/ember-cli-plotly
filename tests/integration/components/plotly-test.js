@@ -10,9 +10,10 @@ import hbs from 'htmlbars-inline-precompile';
 import debug from 'debug';
 const log = debug('ember-cli-plotly:test');
 
+// FIXME: wrong path?
 import Plotly from 'plotly.js';
 
-module('Integration | Component | plot-ly', function (hooks) {
+module('Integration | Component | plotly', function (hooks) {
   setupRenderingTest(hooks);
 
   const barLayerSelector = 'svg > g.cartesianlayer > g > g.plot > g.barlayer';
@@ -21,7 +22,7 @@ module('Integration | Component | plot-ly', function (hooks) {
   const legendEntrySelector = 'g.infolayer > g.legend > g > g > g';
 
   test('it renders', async function (assert) {
-    await render(hbs`{{plot-ly}}`);
+    await render(hbs`<Plotly />`);
     assert.equal(
       this.element.querySelectorAll('div.plot-container').length,
       1,
@@ -35,7 +36,7 @@ module('Integration | Component | plot-ly', function (hooks) {
   });
 
   test('it clears', async function (assert) {
-    await render(hbs`{{plot-ly}}`);
+    await render(hbs`<Plotly />`);
     await clearRender();
     // TODO: See if we can confirm that Plotly.purge gets called
     assert.equal(
@@ -59,8 +60,8 @@ module('Integration | Component | plot-ly', function (hooks) {
       },
     ];
     this.set('traces', traces);
-    await render(hbs`{{plot-ly chartData=traces}}`);
-    assert.equal(
+    await render(hbs`<Plotly @chartData={{this.traces}} />`);
+    assert.strictEqual(
       this.element.querySelectorAll(legendEntrySelector).length,
       2,
       'Legend should containe 2 entries'
@@ -69,20 +70,20 @@ module('Integration | Component | plot-ly', function (hooks) {
       this.element.querySelector(scatterLayerSelector),
       'Plot should contain scatterLayer'
     );
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(`${scatterLayerSelector} g.trace.scatter`)
         .length,
       2,
       'There should be 2 scatter traces'
     );
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(
         `${scatterLayerSelector} g.trace.scatter:first-child > g.points > path`
       ).length,
       3,
       'First trace should have 3 points'
     );
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(
         `${scatterLayerSelector} g.trace.scatter:last-child > g.points > path`
       ).length,
@@ -91,11 +92,9 @@ module('Integration | Component | plot-ly', function (hooks) {
     );
   });
 
-  skip('it redraws when the window is resized', async function (assert) {
-    assert.ok(true, '');
-  });
+  // TODO: test resize
 
-  test('it forwards plotly_click via events + onPlotlyEvent', async function (assert) {
+  test('it forwards plotly_click event to arg-specific handler', async function (assert) {
     const done = assert.async();
     assert.expect(2); // First check the dot's existence, then make sure we got the click event
 
@@ -113,20 +112,24 @@ module('Integration | Component | plot-ly', function (hooks) {
         },
       ],
       chartLayout: {},
-      plotlyEvents: ['plotly_click', 'plotly_restyle'],
-      onPlotlyEvent(eventName, ...otherArgs) {
-        log(`onPlotlyEvent('${eventName}') fired`, ...otherArgs);
-        assert.equal(
-          eventName,
-          'plotly_click',
-          'Should receive plotly_click event'
+      onPlotlyClick(eventData) {
+        log(`onPlotlyClick fired`, eventData);
+        assert.strictEqual(
+          eventData?.points?.curveNumber,
+          1,
+          'Should receive plotly_click event on curveNumber 1'
         );
         done();
       },
     });
     await render(
-      hbs`{{plot-ly chartData=chartData chartLayout=chartLayout plotlyEvents=plotlyEvents onPlotlyEvent=onPlotlyEvent}}`
-    );
+      hbs`<Plotly
+        @chartData={{this.chartData}}
+        @chartLayout={{this.chartLayout}}
+        @on={{hash
+          plotly_click=this.onPlotlyClick
+        }}
+      />`);
 
     const dot = this.element.querySelector(
       'svg.main-svg > g.cartesianlayer > g > g.plot > g.scatterlayer > g > g.points > path'
@@ -135,129 +138,29 @@ module('Integration | Component | plot-ly', function (hooks) {
     await clickOver(dot);
   });
 
-  skip('it uses Plotly.restyle to apply updates', async function (assert) {
+  test('it updates the chart when the source data changes', async function (assert) {
+    // Start by creating a simple, 2-point scatter plot (just 1 series/trace)
     const traces = [
       {
-        x: [1, 2, 3],
-        y: [2, 4, 6],
-        type: 'scatter',
-      },
-      {
-        x: [-1, 10],
-        y: [-2, -20],
+        x: [0, 1],
+        y: [0, 1],
         type: 'scatter',
       },
     ];
     this.set('traces', traces);
-    await render(hbs`{{plot-ly traces=traces}}`);
-    assert.equal(
-      this.element.querySelectorAll(legendEntrySelector).length,
-      2,
-      'Legend should containe 2 entries'
-    );
+    await render(hbs`<Plotly @traces={{this.traces}} />`);
     assert.ok(
       this.element.querySelector(scatterLayerSelector),
       'Plot should contain scatterLayer'
     );
-    assert.equal(
-      this.element.querySelectorAll(`${scatterLayerSelector} g.trace.scatter`)
-        .length,
-      2,
-      'There should be 2 scatter traces'
-    );
-    assert.equal(
-      this.element.querySelectorAll(
-        `${scatterLayerSelector} g.trace.scatter:first-child > g.points > path`
-      ).length,
-      3,
-      'First trace should have 3 points'
-    );
-    assert.equal(
-      this.element.querySelectorAll(
-        `${scatterLayerSelector} g.trace.scatter:last-child > g.points > path`
-      ).length,
-      2,
-      'Second trace should have 2 points'
-    );
-  });
-
-  skip('monkey-patch', async function (assert) {
-    const _newPlot = Plotly.newPlot;
-    Plotly.newPlot = function () {
-      log('monkey-patched newPlot', ...arguments);
-      return _newPlot.call(this, ...arguments);
-    };
-
-    const traces = [
-      {
-        x: [1, 2, 3],
-        y: [2, 4, 6],
-        type: 'scatter',
-      },
-      {
-        x: [-1, 10],
-        y: [-2, -20],
-        type: 'scatter',
-      },
-    ];
-    this.set('traces', traces);
-    await render(hbs`{{plot-ly traces=traces}}`);
-    assert.equal(
-      this.element.querySelectorAll(legendEntrySelector).length,
-      2,
-      'Legend should containe 2 entries'
-    );
-    assert.ok(
-      this.element.querySelector(scatterLayerSelector),
-      'Plot should contain scatterLayer'
-    );
-    assert.equal(
-      this.element.querySelectorAll(`${scatterLayerSelector} g.trace.scatter`)
-        .length,
-      2,
-      'There should be 2 scatter traces'
-    );
-    assert.equal(
-      this.element.querySelectorAll(
-        `${scatterLayerSelector} g.trace.scatter:first-child > g.points > path`
-      ).length,
-      3,
-      'First trace should have 3 points'
-    );
-    assert.equal(
-      this.element.querySelectorAll(
-        `${scatterLayerSelector} g.trace.scatter:last-child > g.points > path`
-      ).length,
-      2,
-      'Second trace should have 2 points'
-    );
-  });
-
-  skip('it updates the chart when the source data changes', async function (assert) {
-    log(
-      'Start by creating a simple, 2-point scatter plot (just 1 series/trace)'
-    );
-    const traces = A([
-      EmberObject.create({
-        x: A([0, 1]),
-        y: A([0, 1]),
-        type: 'scatter',
-      }),
-    ]);
-    this.set('traces', traces);
-    await render(hbs`{{plot-ly traces=traces}}`);
-    assert.ok(
-      this.element.querySelector(scatterLayerSelector),
-      'Plot should contain scatterLayer'
-    );
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(
         `${scatterLayerSelector} g.trace.scatter > g.points > path`
       ).length,
       2,
       'Trace should have 2 points'
     );
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(legendEntrySelector).length,
       0,
       'There should be no legend entry (since there is only 1 trace)'
@@ -269,14 +172,14 @@ module('Integration | Component | plot-ly', function (hooks) {
       traces.get('firstObject.y').pushObject(2);
     });
     await settled();
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(
         `${scatterLayerSelector} g.trace.scatter > g.points > path`
       ).length,
       3,
       'Trace should have 3 points after data updates'
     );
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(legendEntrySelector).length,
       0,
       'There should still be no legend entries'
@@ -293,7 +196,7 @@ module('Integration | Component | plot-ly', function (hooks) {
       );
     });
     await settled();
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(`${scatterLayerSelector} g.trace.scatter`)
         .length,
       2,
@@ -306,13 +209,13 @@ module('Integration | Component | plot-ly', function (hooks) {
       traces.get('1.y').removeAt(0);
     });
     await settled();
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(`${scatterLayerSelector} g.trace.scatter`)
         .length,
       2,
       'There should be 2 traces now'
     );
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(legendEntrySelector).length,
       2,
       'There should be 2 legend entries now'
@@ -323,12 +226,12 @@ module('Integration | Component | plot-ly', function (hooks) {
       traces.set('1.type', 'bar');
     });
     await settled();
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(`${barLayerSelector} g.trace.bars`).length,
       1,
       'There should be 1 (bar) trace now'
     );
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelectorAll(`${scatterLayerSelector} g.trace.scatter`)
         .length,
       1,

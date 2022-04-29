@@ -55,7 +55,6 @@ module.exports = function (environment) {
         // Override plotly.js defaults
         displaylogo: false
       },
-      defaultEvents: [/* list names of plotly events to forward by default */]
     },
     // ...
   };
@@ -85,22 +84,16 @@ import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 
 export default class SomeController extends Controller {
-  constructor(...args) {
-    super(...args);
-    this.setProperties({
-      chartLayout: {
-        // Layout options
-        // See https://plot.ly/javascript/reference/#layout
-      },
-      chartConfig: {
-        // Override default options from config/environment.js & plotly.js
-        // See https://github.com/plotly/plotly.js/blob/master/src/plot_api/plot_config.js
-      },
-      // Component will listen for these events and forward them via onPlotlyEvent
-      plotlyEvents: ['plotly_restyle']
-    });
-      
-  }
+  chartLayout = {
+   // Layout options
+   // See https://plot.ly/javascript/reference/#layout
+  };
+  chartConfig = {
+   // Override default options from config/environment.js & plotly.js
+   // See https://github.com/plotly/plotly.js/blob/master/src/plot_api/plot_config.js
+  };
+  // Component will listen for these events and forward them via onPlotlyEvent
+  plotlyEvents = ['plotly_restyle'];
 
   @computed('model.{x,y,type}')
   get chartData() {

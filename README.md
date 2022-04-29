@@ -1,15 +1,26 @@
-# ember-cli-plotly
+ember-cli-plotly
+==============================================================================
 
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FEmberMN%2Fember-cli-plotly%2Fbadge&style=flat)](https://github.com/EmberMN/ember-cli-plotly/actions)
 [![Latest NPM release](https://img.shields.io/npm/v/ember-cli-plotly)](https://www.npmjs.com/package/ember-cli-plotly)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 [![Ember Observer Score](https://emberobserver.com/badges/ember-cli-plotly.svg)](https://emberobserver.com/addons/ember-cli-plotly)
-[![Dependencies up to date](https://david-dm.org/EmberMN/ember-cli-plotly/status.svg)](https://david-dm.org/EmberMN/ember-cli-plotly)
 
+This addon strives to make it easy & efficient to use [plotly.js](https://plot.ly/javascript/) in Ember applications.
 
-This addon strives to make it easy & efficient to use
-[plotly.js](https://plot.ly/javascript/) in Ember applications.
+Compatibility
+------------------------------------------------------------------------------
 
-## Installation
+* Ember.js v3.24 or above
+* Ember CLI v3.24 or above
+* Node.js v12 or above
+  (though only v16 is tested in CI)
+* [Plotly.js](https://plotly.com/javascript/) v2.x
+  (this addon leaves it as a peer dependency so that
+   you can pick which version you want to use)
+
+Installation
+------------------------------------------------------------------------------
 
 ```
 ember install ember-cli-plotly
@@ -20,11 +31,13 @@ npm install --save-dev ember-cli-plotly
 npm install --save-dev plotly.js
 ```
 
-## Usage
+Usage
+------------------------------------------------------------------------------
 
-## Examples
+Refer to the [examples in the 'dummy app'](./tests/dummy/app/controllers/examples/) for some working examples.
 
-### Static
+
+### Example: Static
 
 ```handlebars
 <Plotly
@@ -45,8 +58,7 @@ npm install --save-dev plotly.js
 />
 ```
 
-### Dynamic
-(See the [examples in the 'dummy app'](./tests/dummy/app/controllers/examples/))
+### Example: Dynamic
 
 ```js
 // my-app/config/environment.js

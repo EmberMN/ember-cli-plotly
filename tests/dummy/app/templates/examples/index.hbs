@@ -2,11 +2,7 @@
 <ul>
   {{#each this.model as |example|}}
     <li>
-      {{!--
-      example.id = {{example.id}}<br>
-      example.name = {{example.name}}<br>
-      --}}
-      {{link-to example.name (concat "examples." example.id)}}
+      <LinkTo @route={{concat "examples." example.id}}>{{example.name}}</LinkTo>
     </li>
   {{/each}}
 </ul>

@@ -1,0 +1,81 @@
+{
+  "name": "ember-cli-plotly",
+  "version": "1.0.0-beta.1",
+  "description": "A basic charting component using Plotly.js",
+  "repository": "https://github.com/EmberMN/ember-cli-plotly",
+  "license": "MIT",
+  "author": "Jacob Quant <jacobq@gmail.com>",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*"
+  },
+  "files": [
+    "dist",
+    "addon-main.cjs",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "concurrently 'npm:watch:*'",
+    "build": "concurrently 'npm:build:*'",
+    "build:js": "rollup -c ./rollup.config.js",
+    "build:docs": "cp ../README.md ./README.md",
+    "watch:js": "rollup -c --watch --no-watch.clearScreen",
+    "lint": "concurrently 'npm:lint:js'",
+    "lint:fix": "concurrently 'npm:lint:js:fix'",
+    "lint:js": "eslint . --cache",
+    "lint:js:fix": "eslint . --fix",
+    "test": "echo 'Addon does not have tests, run tests in test-app'",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@embroider/addon-shim": "1.6.0",
+    "@ember/test-waiters": "^3.0.1",
+    "debug": "4.3.4",
+    "ember-lodash": "4.19.5"
+  },
+  "devDependencies": {
+    "@babel/core": "7.17.10",
+    "@babel/plugin-proposal-class-properties": "7.16.7",
+    "@babel/plugin-syntax-decorators": "7.17.0",
+    "@babel/plugin-proposal-decorators": "7.17.9",
+    "@embroider/addon-dev": "1.6.0",
+    "@nullvoxpopuli/eslint-configs": "2.2.14",
+    "concurrently": "7.1.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-decorator-position": "4.0.1",
+    "eslint-plugin-ember": "10.6.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-json": "3.1.0",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "eslint-plugin-simple-import-sort": "7.0.0",
+    "rollup": "2.71.1",
+    "babel-eslint": "10.1.0",
+    "eslint": "^7.0.0",
+    "@rollup/plugin-babel": "5.3.1"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "ember-addon": {
+    "version": 2,
+    "type": "addon",
+    "main": "./addon-main.cjs",
+    "app-js": {
+      "./components/plotly.js": "./dist/_app_/components/plotly.js",
+      "./helpers/look-but-do-not-touch.js": "./dist/_app_/helpers/look-but-do-not-touch.js",
+      "./helpers/print-json.js": "./dist/_app_/helpers/print-json.js"
+    }
+  },
+  "engines": {
+    "node": "12.* || 14.* || >= 16"
+  },
+  "peerDependencies": {
+    "plotly.js": "2.*"
+  }
+}

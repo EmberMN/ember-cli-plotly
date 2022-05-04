@@ -15,7 +15,7 @@ const ecPlotlyOptions = config.environment['ember-cli-plotly'] ?? {
   defaultLayout: {},
 };
 
-import { getLoggingFunctions } from 'ember-cli-plotly/utils/log';
+import { getLoggingFunctions } from '../utils/log';
 const { log, logVerbose, warn } = getLoggingFunctions('ember-cli-plotly');
 
 // Args:

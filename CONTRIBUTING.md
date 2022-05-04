@@ -19,7 +19,7 @@
 * `ember test --server` – Runs the test suite in "watch mode"
 * `ember try:each` – Runs the test suite against multiple Ember versions
 
-## Running the dummy application
+## Running the test-app
 
 * `ember serve`
 * Visit the dummy application at [http://localhost:4200](http://localhost:4200).

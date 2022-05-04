@@ -30,19 +30,22 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@embroider/addon-shim": "1.6.0",
     "@ember/test-waiters": "^3.0.1",
+    "@embroider/addon-shim": "1.6.0",
     "debug": "4.3.4",
     "ember-lodash": "4.19.5"
   },
   "devDependencies": {
     "@babel/core": "7.17.10",
     "@babel/plugin-proposal-class-properties": "7.16.7",
-    "@babel/plugin-syntax-decorators": "7.17.0",
     "@babel/plugin-proposal-decorators": "7.17.9",
+    "@babel/plugin-syntax-decorators": "7.17.0",
     "@embroider/addon-dev": "1.6.0",
     "@nullvoxpopuli/eslint-configs": "2.2.14",
+    "@rollup/plugin-babel": "5.3.1",
+    "babel-eslint": "10.1.0",
     "concurrently": "7.1.0",
+    "eslint": "^7.0.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-decorator-position": "4.0.1",
     "eslint-plugin-ember": "10.6.0",
@@ -51,10 +54,7 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-simple-import-sort": "7.0.0",
-    "rollup": "2.71.1",
-    "babel-eslint": "10.1.0",
-    "eslint": "^7.0.0",
-    "@rollup/plugin-babel": "5.3.1"
+    "rollup": "2.71.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

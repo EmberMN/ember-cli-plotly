@@ -1,5 +1,12 @@
 # test-app
 
+Make sure to use something like [`npm link`](https://docs.npmjs.com/cli/v8/commands/npm-link)
+(or `rm -rf node_modules/ember-cli-plotly && ln -s ../ember-cli-plotly node_modules/`)
+to ensure that the [local version of `ember-cli-plotly`](../ember-cli-plotly)
+is the one being tested. 
+
+# (the following is generic/auto-generated information)
+
 This README outlines the details of collaborating on this Ember application.
 A short introduction of this app could easily go here.
 

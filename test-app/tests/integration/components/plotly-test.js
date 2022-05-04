@@ -129,7 +129,8 @@ module('Integration | Component | plotly', function (hooks) {
         @on={{hash
           plotly_click=this.onPlotlyClick
         }}
-      />`);
+      />`
+    );
 
     const dot = this.element.querySelector(
       'svg.main-svg > g.cartesianlayer > g > g.plot > g.scatterlayer > g > g.points > path'

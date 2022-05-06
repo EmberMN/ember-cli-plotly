@@ -4,6 +4,7 @@ import { action, computed } from '@ember/object';
 
 import getNormalDistPDF from 'dummy/utils/get-normal-dist-pdf';
 
+// FIXME: this example/demo is out of date
 
 const activeColor = '#01a0e1';
 const passiveColor = '#959595';
@@ -74,8 +75,8 @@ export default class ExamplesLiveColorsController extends Controller {
     const currentTrace = this.currentTrace;
     const currentIndex = this.currentIndex;
     console.log(
-      `Update called: currentTrace=${currentTrace}, currentIndex=${currentIndex}`,
-      this.get(`data`)
+      `live-colors: updating currentTrace=${currentTrace}, currentIndex=${currentIndex}`,
+      this.data,
     );
 
     // Prepare to do next point

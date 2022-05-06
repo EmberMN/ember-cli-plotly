@@ -49,23 +49,22 @@ function getSampleData(funcs, xs) {
 }
 
 export default class BoundLayoutController extends Controller {
-  xaxis = {
-    @tracked min: -10,
-    @tracked max: 10,
-  };
-
-  yaxis = {
-    @tracked min: -2,
-    @tracked max: 2,
-  };
-
   @tracked useFixedData = false;
+  @tracked nPoints = 256;
+  @tracked xmin = '-10';
+  @tracked xmax = '10';
+  @tracked ymin = '-2';
+  @tracked ymax = '2';
+  datarevision = 0;
+  uirevision = 0;
 
   @action
   toggleUseFixedData() {
     this.useFixedData = !this.useFixedData;
   }
 
+  // Does it matter that this is decorated with @cached?
+  // It should always produce the same value
   @cached
   get fixedData() {
     return getSampleData(
@@ -74,34 +73,43 @@ export default class BoundLayoutController extends Controller {
     );
   }
 
-  @tracked nPoints = 256;
   @cached
   get data() {
+    // FIXME: check exactly if/when these are needed
+    this.datarevision++;
+    this.uirevision++;
+
     console.log(`computing data; useFixedData=${this.useFixedData}`);
     if (this.useFixedData) {
       return this.fixedData;
     }
-    console.log(
-      `xmin=${this.xaxis.min}, xmax=${this.xaxis.max}, nPoints=${this.nPoints}`
-    );
-    return getSampleData(
+    //console.log(`xmin=${this.xmin}, xmax=${this.xmax}, nPoints=${this.nPoints}`);
+    const data = getSampleData(
       exampleFunctions,
-      linspace(this.xaxis.min, this.xaxis.max, this.nPoints)
+      linspace(parseFloat(this.xmin), parseFloat(this.xmax), this.nPoints)
     );
+    for (const series of data) {
+      // Drop points with y=NaN values
+      const x = [];
+      const y = series.y.filter((y, i) => {
+        if (isNaN(y)) {
+          return false;
+        }
+        x.push(series.x[i]);
+        return true;
+      });
+      series.x = x;
+      series.y = y;
+    }
+    return data;
   }
 
+  @cached
   get layout() {
-    log(
-      `computing layout`,
-      this.xaxis.min,
-      this.xaxis.max,
-      this.yaxis.min,
-      this.yaxis.max
-    );
     const getRange = (axis) => {
-      let min = parseFloat(this[axis].min);
+      let min = parseFloat(axis.startsWith('x') ? this.xmin : this.ymin);
       if (typeof min !== 'number') min = 0;
-      let max = parseFloat(this[axis].max);
+      let max = parseFloat(axis.startsWith('x') ? this.xmax : this.ymax);
       if (typeof max !== 'number') max = min + 1;
       return [min, max];
     };
@@ -113,6 +121,8 @@ export default class BoundLayoutController extends Controller {
       yaxis: {
         range: getRange('yaxis'),
       },
+      datarevision: this.datarevision,
+      uirevision: this.uirevision,
     };
   }
 }

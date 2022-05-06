@@ -12,18 +12,18 @@
         <td>X</td>
         <td>
           <label>
-            <Input @type="range" @value={{this.xaxis.min}} min="-50" max="50" step="0.1" />
+            <Input @type="range" @value={{this.xmin}} min="-50" max="50" step="0.1" />
           </label>
           <label>
-            <Input @type="number" @value={{this.xaxis.min}} min="-50" max="50" step="0.1" />
+            <Input @type="number" @value={{this.xmin}} min="-50" max="50" step="0.1" />
           </label>
         </td>
         <td>
           <label>
-            <Input @type="range" @value={{this.xaxis.max}} min="-50" max="50" step="0.1" />
+            <Input @type="range" @value={{this.xmax}} min="-50" max="50" step="0.1" />
           </label>
           <label>
-            <Input @type="number" @value={{this.xaxis.max}} min="-50" max="50" step="0.1" />
+            <Input @type="number" @value={{this.xmax}} min="-50" max="50" step="0.1" />
           </label>
         </td>
       </tr>
@@ -31,18 +31,18 @@
         <td>Y</td>
         <td>
           <label>
-            <Input @type="range" @value={{this.yaxis.min}} min="-50" max="50" step="0.1" />
+            <Input @type="range" @value={{this.ymin}} min="-50" max="50" step="0.1" />
           </label>
           <label>
-            <Input @type="number" @value={{this.yaxis.min}} min="-50" max="50" step="0.1" />
+            <Input @type="number" @value={{this.ymin}} min="-50" max="50" step="0.1" />
           </label>
         </td>
         <td>
           <label>
-            <Input @type="range" @value={{this.yaxis.max}} min="-50" max="50" step="0.1" />
+            <Input @type="range" @value={{this.ymax}} min="-50" max="50" step="0.1" />
           </label>
           <label>
-            <Input @type="number" @value={{this.yaxis.max}} min="-50" max="50" step="0.1" />
+            <Input @type="number" @value={{this.ymax}} min="-50" max="50" step="0.1" />
           </label>
         </td>
       </tr>
@@ -51,14 +51,18 @@
   <Plotly
     @data={{this.data}}
     @layout={{this.layout}}
+    style="width: 960px; height: 540px;"
   />
   <pre>
-Computed:
+layout.{xaxis,yaxis}.range:
 X: [{{this.layout.xaxis.range}}]
 Y: [{{this.layout.yaxis.range}}]
 
+{{print-json this.data}}
+{{!--
 Data:
 x -> {{get this.data "0.x"}}
 y -> {{get this.data "0.y"}}
+--}}
   </pre>
 </section>

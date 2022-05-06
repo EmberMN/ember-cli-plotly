@@ -23,7 +23,7 @@ import {
 export interface PlotlyArgs extends Partial<PlotlyComponentOptions> {
   id?: string;
   config?: PlotlyConfig;
-  data?: PlotlyData;
+  data?: PlotlyData[];
   layout?: PlotlyLayout;
   on?: {
     [eventName: string]: () => any;
@@ -39,10 +39,12 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
   @tracked hasCreatedPlot = false;
 
   get chartConfig() {
-    return this.options.config;
+    // Note: should never be null, but I'm not sure how to cleanly update the
+    //       type information for getOptions to express that.
+    return this.options.config ?? {};
   }
 
-  get chartData() {
+  get chartData(): PlotlyData[] {
     warn(
       'The @data argument was not provided (hence the plot may be empty).',
       Boolean(this.args.data),
@@ -80,26 +82,31 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
 
   @action async update(source?: string) {
     console.log(`plotly-component: update called ${source ? '(' + source + ')' : ''}`, this.args.data);
-    warn(`update aborted since component was destroyed.`, !this.isDestroying, {
-      id: 'ember-cli-plotly.update-called-after-destroy',
-    });
     if (this.isDestroying) {
+      warn(`update aborted since component was destroyed.`, !this.isDestroying, {
+        id: 'ember-cli-plotly.update-called-after-destroy',
+      });
       return;
     }
     const gd = document.getElementById(this.plotlyContainerElementId);
     if (!gd) {
-      // graph div element is not yet in the DOM
+      warn(`plotly-component: update since graph <div> was not yet available in the DOM.`, Boolean(gd), {
+        id: 'ember-cli-plotly.update-without-gd',
+      });
       return;
     }
     let didSucceed = false;
     try {
+      console.log('Calling Plotly.react')
       await Plotly.react(
         gd,
         this.chartData,
         this.chartLayout,
+        // @ts-expect-error The @types/plotly.js definitions are out of date
         this.chartConfig
       );
       didSucceed = true;
+      console.log('Plotly.react finished')
     } catch (e) {
       warn(
         `Plotly.js threw exception while attempting to update chart`,

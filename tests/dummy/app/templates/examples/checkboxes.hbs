@@ -1,0 +1,18 @@
+<ul>
+  {{#each this.dataSets as |dataSet|}}
+    <li>
+      <Input
+        id={{dataSet.name}}
+        @type="checkbox"
+        @checked={{mut dataSet.isPassedToPlotly}}
+      />
+      <label for={{dataSet.name}}>{{dataSet.name}}</label>
+    </li>
+  {{/each}}
+</ul>
+numberChecked = {{this.numberChecked}}
+<Plotly
+  @data={{this.data}}
+  @layout={{this.layout}}
+  @config={{this.config}}
+/>

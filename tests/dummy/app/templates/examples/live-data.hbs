@@ -1,0 +1,24 @@
+<Plotly
+  @id="foo"
+  @data={{this.data}}
+  @layout={{this.layout}}
+  @config={{this.config}}
+  @updateDebounceInterval=1000
+  @on={{hash
+    plotly_click=(fn this.onPlotlyEvent "click")
+  }}
+  style="width: 960px; height: 540px"
+/>
+
+<Input @type="number" min="100" max="3600" step="100" @value={{this.interval}} />
+
+<button {{on "click" this.start}} type="button">Start</button>
+<button {{on "click" this.stop}} type="button">Stop</button>
+<button {{on "click" this.clear}} type="button">Clear</button>
+
+currentTrace: {{this.currentTrace}}
+currentIndex: {{this.currentIndex}}
+datarevision: {{this.layout.datarevision}}
+<pre>
+  {{print-json this.data}}
+</pre>

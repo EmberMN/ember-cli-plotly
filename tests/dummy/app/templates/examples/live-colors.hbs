@@ -1,0 +1,13 @@
+<Plotly
+  @data={{this.data}}
+  @layout={{this.layout}}
+  @config={{this.config}}
+/>
+
+<Input @type="number" min="100" max="3600" step="100" @value={{this.interval}} />
+
+<button onclick={{action "start"}} type="button">Start</button>
+<button onclick={{action "stop"}} type="button">Stop</button>
+<button onclick={{action "clear"}} type="button">Clear</button>
+
+currentTrace: {{currentTrace}}, currentIndex: {{currentIndex}}

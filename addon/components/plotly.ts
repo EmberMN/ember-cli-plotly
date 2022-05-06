@@ -56,8 +56,9 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
     //        (without using @cached), so this should at least work,
     //        but it is a problem waiting to happen :/
     //        (e.g. can easily make an infinite loop).
-    if (this.hasCreatedPlot && this.options.updateOnDataChange) {
-      debounce(this, this.update, this.options.updateDebounceInterval, true);
+    if (this.options.updateOnDataChange) {
+      const immediate = false;
+      debounce(this, this.update, "debounced updateOnDataChange", this.options.updateDebounceInterval, immediate);
     }
     return this.args.data ?? [];
   }
@@ -71,24 +72,29 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
   //         See https://plotly.com/javascript/uirevision/
   get chartLayout() {
     return {
-      datarevision: 0,
-      uirevision: 0,
+      //datarevision: 0,
+      //uirevision: 0,
       ...this.options.layout,
-      //...this.args.layout,
     };
   }
 
-  @action async update() {
+  @action async update(source?: string) {
+    console.log(`plotly-component: update called ${source ? '(' + source + ')' : ''}`, this.args.data);
     warn(`update aborted since component was destroyed.`, !this.isDestroying, {
       id: 'ember-cli-plotly.update-called-after-destroy',
     });
     if (this.isDestroying) {
       return;
     }
+    const gd = document.getElementById(this.plotlyContainerElementId);
+    if (!gd) {
+      // graph div element is not yet in the DOM
+      return;
+    }
     let didSucceed = false;
     try {
       await Plotly.react(
-        this.plotlyContainerElementId,
+        gd,
         this.chartData,
         this.chartLayout,
         this.chartConfig
@@ -96,20 +102,20 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
       didSucceed = true;
     } catch (e) {
       warn(
-        `Plotly.js threw exception while attempting to update chart` +
-          `(plotlyArgs=${JSON.stringify([
-            this.plotlyContainerElementId,
-            this.chartData,
-            this.chartLayout,
-            this.chartConfig
-          ], null, 2)})`,
+        `Plotly.js threw exception while attempting to update chart`,
         false,
         {
           id: 'ember-cli-plotly.plotly-js-exception',
         }
       );
       runInDebug(() => {
-        console.error(e);
+        console.error({
+          e,
+          gd,
+          config: this.chartConfig,
+          data: this.chartData,
+          layout: this.chartLayout,
+        });
         //debugger; // eslint-disable-line no-debugger
         //throw e;
       });
@@ -133,15 +139,12 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
       const gd = <PlotlyHTMLElement> maybeGraphDiv;
       for (const [eventName, handler] of Object.entries(this.args.on ?? {})) {
         if (validateEventHandlerArgs(eventName, handler)) {
-          console.debug(`Setting up ${eventName} event handler`, eventName, handler); // FIXME: remove debug
           gd.on(eventName, handler);
-        } else {
-          debugger; // FIXME: remove
         }
       }
     } else {
-      this.hasCreatedPlot = false;
-      debugger; // FIXME: remove
+      //debugger;
+      //this.hasCreatedPlot = false;
     }
   }
 

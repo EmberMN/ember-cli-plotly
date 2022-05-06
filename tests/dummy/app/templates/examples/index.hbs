@@ -1,0 +1,8 @@
+<h3>List of examples</h3>
+<ul>
+  {{#each this.model as |example|}}
+    <li>
+      <LinkTo @route={{concat "examples." example.id}}>{{example.name}}</LinkTo>
+    </li>
+  {{/each}}
+</ul>

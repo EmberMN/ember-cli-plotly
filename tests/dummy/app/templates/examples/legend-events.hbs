@@ -1,0 +1,13 @@
+<Plotly
+  @data={{this.data}}
+  @layout={{this.layout}}
+  @config={{this.config}}
+  @on={{hash
+    plotly_legendclick=this.onLegendClick
+    plotly_legenddoubleclick=this.onLegendDoubleClick
+  }}
+/>
+<ul>
+  <li>lastClicked: {{this.lastClicked}}</li>
+  <li>lastDoubleClicked: {{this.lastDoubleClicked}}</li>
+</ul>

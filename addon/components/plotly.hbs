@@ -1,9 +1,14 @@
-{{!look-but-do-not-touch this.config this.data this.layout}}
+{{!
+  This is to ensure that ember/glimmer calls the getters for these
+  @tracked variables so that the (optional, hacky) side-effect
+  behavior of triggering a plot update can activate.
+  TODO: See if this should be done with a modifier instead
+}}
+{{look-but-do-not-touch this.chartConfig this.chartData this.chartLayout}}
 <div
   id={{this.plotlyContainerElementId}}
-  {{did-insert this.update}}
-  {{did-update this.update}}
+  {{did-insert (fn this.update "did-insert")}}
+  {{did-update (fn this.update "did-update")}}
   {{will-destroy this.tearDown}}
   ...attributes
 >{{yield}}</div>
-

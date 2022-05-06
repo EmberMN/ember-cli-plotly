@@ -1,0 +1,64 @@
+<section class="bound-layout">
+  <span>useFixedData={{this.useFixedData}}</span><br>
+  <button type="button" {{on "click" this.toggleUseFixedData}}>{{if this.useFixedData "Recalc data on view change" "Use fixed data"}}</button>
+  <table>
+    <tbody>
+      <tr>
+        <th></th>
+        <th>min</th>
+        <th>max</th>
+      </tr>
+      <tr>
+        <td>X</td>
+        <td>
+          <label>
+            <Input @type="range" @value={{this.xaxis.min}} min="-50" max="50" step="0.1" />
+          </label>
+          <label>
+            <Input @type="number" @value={{this.xaxis.min}} min="-50" max="50" step="0.1" />
+          </label>
+        </td>
+        <td>
+          <label>
+            <Input @type="range" @value={{this.xaxis.max}} min="-50" max="50" step="0.1" />
+          </label>
+          <label>
+            <Input @type="number" @value={{this.xaxis.max}} min="-50" max="50" step="0.1" />
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td>Y</td>
+        <td>
+          <label>
+            <Input @type="range" @value={{this.yaxis.min}} min="-50" max="50" step="0.1" />
+          </label>
+          <label>
+            <Input @type="number" @value={{this.yaxis.min}} min="-50" max="50" step="0.1" />
+          </label>
+        </td>
+        <td>
+          <label>
+            <Input @type="range" @value={{this.yaxis.max}} min="-50" max="50" step="0.1" />
+          </label>
+          <label>
+            <Input @type="number" @value={{this.yaxis.max}} min="-50" max="50" step="0.1" />
+          </label>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <Plotly
+    @data={{this.data}}
+    @layout={{this.layout}}
+  />
+  <pre>
+Computed:
+X: [{{this.layout.xaxis.range}}]
+Y: [{{this.layout.yaxis.range}}]
+
+Data:
+x -> {{get this.data "0.x"}}
+y -> {{get this.data "0.y"}}
+  </pre>
+</section>

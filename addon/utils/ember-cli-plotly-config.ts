@@ -39,7 +39,7 @@ export function getOptions(options: PlotlyArgs = {}): EmberCliPlotlyConfig {
     // Args for <Plotly /> component
     autoResize: getFirst('autoResize', sources, true),
     resizeDebounceInterval: getFirst('resizeDebounceInterval', sources, 100),
-    updateDebounceInterval: getFirst('updateDebounceInterval', sources, 100),
+    updateDebounceInterval: getFirst('updateDebounceInterval', sources, 50),
     updateOnDataChange: getFirst('updateOnDataChange', sources, true),
     // plotly.js API
     config: {

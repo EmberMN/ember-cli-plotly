@@ -1,0 +1,11 @@
+<Plotly
+  @data={{this.data}}
+  @layout={{this.layout}}
+  @config={{this.config}}
+  @on={{hash
+    plotly_click=this.onPlotlyClick
+    plotly_selected=this.onPlotlySelected
+  }}
+/>
+Selected traces: <pre>{{print-json this.selectedTraces spaces=2}}</pre>
+Selected points: <pre>{{print-json this.selectedPoints spaces=2}}</pre>

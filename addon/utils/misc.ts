@@ -10,7 +10,7 @@ import { PlotlyHTMLElement } from './plotly-api';
 export function validateGraphDiv(gd: PlotlyHTMLElement | HTMLElement | null): gd is PlotlyHTMLElement {
   warn(
     `Did not receive graph <div> with valid .on(...) method. Please make sure plotly.js has initialized.`,
-    Boolean(gd || typeof (gd as PlotlyHTMLElement).on !== 'function'),
+    Boolean(gd && typeof (gd as PlotlyHTMLElement).on === 'function'),
     { id: 'ember-cli-plotly.invalid-graph-div' }
   );
   return Boolean(gd && 'on' in gd && typeof gd.on === 'function');

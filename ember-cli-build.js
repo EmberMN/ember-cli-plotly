@@ -5,6 +5,24 @@ const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
     // Add options here
+    autoImport: {
+      alias: {
+        'plotly.js': 'plotly.js/dist/plotly-basic',
+      },
+      webpack: {
+        // extra webpack configuration goes here
+        node: {
+          //__dirname,
+          //__filename,
+          global: true,
+        },
+        resolve: {
+          fallback: {
+            stream: require.resolve('stream-browserify'),
+          },
+        },
+      },
+    },
   });
 
   /*

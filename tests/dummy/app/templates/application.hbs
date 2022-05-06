@@ -2,4 +2,12 @@
 
 <h2 id="title">Welcome to Ember</h2>
 
+<Plotly
+  @data={{hash
+    x=(array 1 2 3)
+    y=(array 1 2 3)
+    type="scatter"
+  }}
+/>
+
 {{outlet}}

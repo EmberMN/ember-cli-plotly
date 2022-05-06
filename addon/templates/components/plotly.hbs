@@ -1,0 +1,9 @@
+{{!look-but-do-not-touch this.config this.data this.layout}}
+<div
+  id={{this.plotlyContainerElementId}}
+  {{did-insert this.update}}
+  {{did-update this.update}}
+  {{will-destroy this.tearDown}}
+  ...attributes
+>{{yield}}</div>
+

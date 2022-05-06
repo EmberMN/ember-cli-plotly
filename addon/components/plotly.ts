@@ -45,7 +45,7 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
   get chartData() {
     warn(
       'The @data argument was not provided (hence the plot may be empty).',
-      !this.args.data,
+      Boolean(this.args.data),
       {
         id: 'ember-cli-plotly.missing-data',
       }
@@ -56,16 +56,10 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
     //        (without using @cached), so this should at least work,
     //        but it is a problem waiting to happen :/
     //        (e.g. can easily make an infinite loop).
-    if (this.hasCreatedPlot) {
-      debounce(
-        this,
-        this.update,
-        {},
-        this.options.updateDebounceInterval,
-        true
-      );
+    if (this.hasCreatedPlot && this.options.updateOnDataChange) {
+      debounce(this, this.update, this.options.updateDebounceInterval, true);
     }
-    return this.args.data ?? {};
+    return this.args.data ?? [];
   }
 
   // Note 1: when the data array is modified after plot has
@@ -85,27 +79,31 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
   }
 
   @action async update() {
-    warn(`update aborted since component was destroyed.`, this.isDestroying, {
+    warn(`update aborted since component was destroyed.`, !this.isDestroying, {
       id: 'ember-cli-plotly.update-called-after-destroy',
     });
     if (this.isDestroying) {
       return;
     }
-    const plotlyArgs = [
-      this.plotlyContainerElementId,
-      this.chartData,
-      this.chartLayout,
-      this.chartConfig,
-    ];
     let didSucceed = false;
     try {
-      await Plotly.react(...plotlyArgs);
+      await Plotly.react(
+        this.plotlyContainerElementId,
+        this.chartData,
+        this.chartLayout,
+        this.chartConfig
+      );
       didSucceed = true;
     } catch (e) {
       warn(
         `Plotly.js threw exception while attempting to update chart` +
-          `(plotlyArgs=${JSON.stringify(plotlyArgs, null, 2)})`,
-        true,
+          `(plotlyArgs=${JSON.stringify([
+            this.plotlyContainerElementId,
+            this.chartData,
+            this.chartLayout,
+            this.chartConfig
+          ], null, 2)})`,
+        false,
         {
           id: 'ember-cli-plotly.plotly-js-exception',
         }

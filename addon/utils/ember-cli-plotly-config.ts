@@ -7,9 +7,9 @@ import { PlotlyArgs } from '../components/plotly';
 
 export interface PlotlyComponentOptions {
   autoResize: boolean;
-  //deepTrackChartData?: boolean;
   resizeDebounceInterval: number;
   updateDebounceInterval: number;
+  updateOnDataChange: boolean;
 }
 
 export interface EmberCliPlotlyConfig extends PlotlyComponentOptions {
@@ -38,9 +38,9 @@ export function getOptions(options: PlotlyArgs = {}): EmberCliPlotlyConfig {
   return {
     // Args for <Plotly /> component
     autoResize: getFirst('autoResize', sources, true),
-    //deepTrackChartData: getFirst('deepTrackChartData', sources, true),
     resizeDebounceInterval: getFirst('resizeDebounceInterval', sources, 100),
     updateDebounceInterval: getFirst('updateDebounceInterval', sources, 100),
+    updateOnDataChange: getFirst('updateOnDataChange', sources, true),
     // plotly.js API
     config: {
       ...defaultConfig,

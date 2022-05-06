@@ -17,14 +17,24 @@ export interface PlotlyHTMLElement extends Omit<BrokenPlotlyHTMLElement, 'remove
 
 export interface PlotlyConfig extends Partial<Omit<Config, 'scrollZoom' | 'setBackground'>> {
   // Missing parentheses around function in @types/plotly.js definitions
+  // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/60184
   setBackground?:
     | ((gd: PlotlyHTMLElement, color: string) => any)
     | 'opaque'
     | 'transparent';
   // Missing string option in @types/plotly.js definitions
   scrollZoom?: string | boolean;
-  // Added in v2.10 (https://github.com/plotly/plotly.js/pull/6073)
+  // Missing option (added in v1.49)
+  // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/60203
+  doubleClickDelay?: number;
+  // Missing option (added in v2.10)
+  // See https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/60205
   typesetMath?: boolean;
+  // Missing option (added in v1.49.0)
+  // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/60204
+  watermark?: boolean;
+  // (did not file report)
+  notifyOnLogging?: number;
 }
 
 export type PlotlyData = Data;

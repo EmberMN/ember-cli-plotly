@@ -10,21 +10,21 @@ import { PlotlyHTMLElement } from './plotly-api';
 export function validateGraphDiv(gd: PlotlyHTMLElement | HTMLElement | null): gd is PlotlyHTMLElement {
   warn(
     `Did not receive graph <div> with valid .on(...) method. Please make sure plotly.js has initialized.`,
-    !gd || typeof (gd as PlotlyHTMLElement).on !== 'function',
+    Boolean(gd || typeof (gd as PlotlyHTMLElement).on !== 'function'),
     { id: 'ember-cli-plotly.invalid-graph-div' }
   );
   return Boolean(gd && 'on' in gd && typeof gd.on === 'function');
 }
 
-export function validateEventHandlerArgs(eventName, handler) {
+export function validateEventHandlerArgs(eventName: any, handler: any) {
   warn(
     `Could not bind plotly.js event handler: plotlyEventName must be a string (got ${eventName})`,
-    typeof eventName !== 'string',
+    typeof eventName === 'string',
     { id: 'ember-cli-plotly.invalid-event-handler' }
   );
   warn(
     `Could not bind plotly.js event handler: handler must be a function (got ${handler})`,
-    typeof handler !== 'function',
+    typeof handler === 'function',
     { id: 'ember-cli-plotly.invalid-event-handler' }
   );
   return typeof eventName === 'string' && typeof handler === 'function';

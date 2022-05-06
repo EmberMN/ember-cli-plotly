@@ -54,9 +54,16 @@ However, if you need to change the id you must pass it via the `@id` argument.
 Otherwise, a unique (pseudorandom) id will be generated.
 
 The `@data`, `@config`, and `@layout` arguments get passed to `Plotly.newPlot/react`.
+If you do *NOT* want the chart to update automatically you should set `@updateOnDataChange=false`.
 If you want the chart to automatically update when data is changed, 
 take a look at [`ember-deep-tracked`](https://github.com/NullVoxPopuli/ember-deep-tracked),
 which can be used to track nested properties (like the numbers in `@data[0].x`).
+To avoid attempting to update too frequently, these events are debounced using
+`updateDebounceInterval` (default 100ms).
+
+**TODO:** Describe `autoResize` & `resizeDebounceInterval`
+
+**TODO:** Describe setting defaults via environment `ember-cli-plotly` values
 
 Since [Plotly's events](https://plotly.com/javascript/plotlyjs-events/)
 are not emitted as "normal" DOM events, one cannot simply
@@ -66,7 +73,6 @@ Rather one needs to use methods added to the gd element
 For convenience, this `<Plotly />` component will accept an `@on`
 argument containing a map of event names to handlers
 (e.g. `@on={{hash plotly_click=this.myClickHandler plotly_legendclick=this.myLegendClickHandler}}`).
-
 
 
 Examples

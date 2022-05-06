@@ -1,13 +1,23 @@
 {
   "name": "ember-cli-plotly",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "1.0.0-beta.1",
+  "description": "A basic charting component using Plotly.js",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "data-visualization",
+    "visualization",
+    "chart",
+    "charting",
+    "graph",
+    "graphing",
+    "plot",
+    "plotting",
+    "plotly",
+    "plotly.js"
   ],
-  "repository": "",
+  "repository": "https://github.com/EmberMN/ember-cli-plotly",
   "license": "MIT",
-  "author": "",
+  "author": "Jacob Quant <jacobq@gmail.com>",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -28,12 +38,12 @@
     "postpack": "ember ts:clean"
   },
   "dependencies": {
+    "@ember/render-modifiers": "^2.0.4",
     "ember-auto-import": "^2.4.0",
     "ember-cli-babel": "^7.26.11",
     "ember-cli-htmlbars": "^6.0.1",
     "ember-cli-typescript": "^5.1.0",
     "ember-get-config": "^2.0.0",
-    "plotly.js": "2.11.0",
     "stream-browserify": "^3.0.0"
   },
   "devDependencies": {
@@ -102,7 +112,7 @@
     "plotly.js": "2.*"
   },
   "engines": {
-    "node": "12.* || 14.* || >= 16"
+    "node": "14.* || 16.* || >= 18"
   },
   "ember": {
     "edition": "octane"

@@ -21,6 +21,7 @@ import {
 } from '../utils/ember-cli-plotly-config';
 
 export interface PlotlyArgs extends Partial<PlotlyComponentOptions> {
+  id?: string;
   config?: PlotlyConfig;
   data?: PlotlyData;
   layout?: PlotlyLayout;
@@ -33,7 +34,7 @@ export default class PlotlyComponent extends Component<PlotlyArgs> {
   makeUniqueId() {
     return `plotly-${Date.now()}-${Math.floor(10000 * Math.random())}`;
   }
-  @tracked plotlyContainerElementId = this.makeUniqueId();
+  @tracked plotlyContainerElementId = this.args.id ?? this.makeUniqueId();
   @deepTracked options = getOptions(this.args);
   @tracked hasCreatedPlot = false;
 

@@ -4,15 +4,7 @@ const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
-    // Plotly.js uses the `has-hover` package which relies on Node.js' `global` object
-    autoImport: {
-      webpack: {
-        node: {
-          global: true,
-          fs: 'empty'
-        }
-      }
-    }
+    // Add options here
   });
 
   /*

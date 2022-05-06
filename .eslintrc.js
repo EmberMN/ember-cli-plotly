@@ -19,9 +19,7 @@ module.exports = {
   env: {
     browser: true,
   },
-  rules: {
-    'ember/no-jquery': 'warn',
-  },
+  rules: {},
   overrides: [
     // node files
     {
@@ -47,7 +45,7 @@ module.exports = {
       extends: ['plugin:node/recommended'],
     },
     {
-      // Test files:
+      // test files
       files: ['tests/**/*-test.{js,ts}'],
       extends: ['plugin:qunit/recommended'],
     },

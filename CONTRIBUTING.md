@@ -1,17 +1,15 @@
 # How To Contribute
 
-(Note: these are generic instructions)
-
 ## Installation
 
 * `git clone <repository-url>`
 * `cd ember-cli-plotly`
-* `npm install` (or `yarn`)
+* `yarn install`
 
 ## Linting
 
-* `npm run lint` (or `yarn lint`)
-* `npm run lint:fix` (or `yarn lint:fix`)
+* `yarn lint`
+* `yarn lint:fix`
 
 ## Running tests
 
@@ -24,4 +22,4 @@
 * `ember serve`
 * Visit the dummy application at [http://localhost:4200](http://localhost:4200).
 
-For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
+For more information on using ember-cli, visit [https://cli.emberjs.com/release/](https://cli.emberjs.com/release/).

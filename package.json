@@ -88,7 +88,7 @@
     "qunit": "^2.16.0",
     "qunit-dom": "1.6.0",
     "safe-json-stringify": "1.2.0",
-    "testdouble": "3.16.1"
+    "testdouble": "3.20.2"
   },
   "engines": {
     "node": "12.* || 14.* || >= 16"
